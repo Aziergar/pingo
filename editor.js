@@ -1,4 +1,3 @@
-let slider;
 function setup()
 {
     canvas.setup("Content", 800, 600);
