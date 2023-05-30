@@ -1,3 +1,4 @@
+let slider;
 function setup()
 {
     canvas.setup("Content", 800, 600);
@@ -13,7 +14,6 @@ function setup()
 function draw()
 {
     canvas.outerLayer.clear();
-    
     if (canvas.drawCheck())
     {
         canvas.drawn = true;
