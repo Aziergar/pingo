@@ -1,0 +1,337 @@
+body {
+background-color: #E2DBFF;
+ display: grid;
+ grid-template-columns: 70% 30%;
+}
+
+.panel {
+    width: 100%;
+    min-width:100%;
+    height: 60px;
+    background-color: rgb(255, 255, 255);
+    margin-top: 1px;
+    margin-bottom: 40px;
+    margin-left: 10px;
+    border: 2px solid black;
+    border-radius: 15px;
+    display: inline-flex;
+    padding-right:20px;
+}
+
+.first-column {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    grid-column:1;
+}
+
+.second-column {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    grid-column:2;
+}
+
+
+.Mode {
+    width: 40px;
+    height: 40px;
+    margin-left: 40px;
+    margin-top: 7px;
+    border: 0px;
+    background: transparent;
+
+}
+
+.box-buttons-panel-left {
+    width: 100%;
+    margin-right: 10px;
+}
+
+
+
+h1 {
+    height: 40px;
+    margin-top: 0px;
+    margin-left: 20px;
+    font-size: 40px;
+
+}
+
+.Right {
+    float:right;
+    padding-right: 34px;
+}
+
+.chat {
+    height: 30%;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+}
+
+#chat-log {
+    width: 290px;
+    height: 180px;
+    background-color: #FDF7C1;
+    margin-top: 30px;
+    border: 2px solid black;
+    border-radius: 15px;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.textChat {
+    display: block;
+    width: 300px;
+    height: 30px;
+    position: relative;
+    display: flex;
+    margin-top: 1px;
+}
+
+#chat-message-input {
+    width: 220px;
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 15px;
+    padding-left: 10px;
+}
+
+#chat-message-submit {
+    margin-left: 10px;
+    bottom: 0px;
+    background-color: #AAFFF0;
+    width: 60px;
+    height: 35px;
+    border: 2px solid #7bbaae;
+    border-radius: 20px;
+
+}
+
+.settingRoomInfo {
+    display: none;
+    z-index:6;
+    background-color: #AAFFF0;
+    border: solid 2px black;
+    position: absolute;
+    top: 90px;
+    right: 30%;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 10px 10px 10px grey;
+    font-size: 18px;
+}
+
+.settingInstruments {
+    width: 300px;
+    height: 400px;
+    background-color: #FDF7C1;
+    border: 2px solid black;
+    position: fixed;
+    right: 20px;
+    border-radius: 15px;
+}
+.text-Setting-container {
+    width: 300px;
+    height: 400px;
+    background-color: #FDF7C1;
+    border: 2px solid black;
+    margin-top: 10px;
+    margin-right: 15px;
+    border-radius: 15px;
+}
+
+.text-text-Setting {
+    font-size: 25px;
+    text-align:center;
+    margin-top: 15px;
+
+}
+
+.text-Setting {
+    width: 250px;
+    height: 320px;
+    background-color: rgb(255, 255, 255);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+select[name='select-text-Setting'] {
+    width: 220px;
+    height: 30px;
+    margin-left: 15px;
+    margin-top: 20px;
+    background-color: #AAFFF0 ;
+  }
+
+select[name='size-select-text'] {
+    width: 150px;
+    height: 30px;
+    margin-left: 15px;
+    margin-top: 20px;
+    background-color: #AAFFF0 ;
+}
+
+.buttons-text {
+    width: 25px;
+    height: 25px;
+    margin-top: 25px;
+    margin-left: 20px;
+    background: transparent;
+    border: 0px;
+}
+
+.buttons-text2 {
+    width: 40px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 30px;
+    background: transparent;
+    border: 0px;
+}
+
+
+.size-text {
+    height: 50px;
+    position: relative;
+}
+
+.icon-color {
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    margin-left: 15px;
+    position: absolute;
+    padding: 0%;
+    border: 0px;
+
+}
+
+box-figures-Setting {
+height: 150px;
+}
+
+.figuresIntSetting{
+    width: 70px;
+    height: 70px;
+    margin: 25px;
+    margin-left: 25px;
+    border: 0px;
+    background: transparent;
+}
+
+
+.instrumentsBrushes {
+    width: 35px;
+    height: 35px;
+    margin-left: 8px;
+    margin-top: 10px;
+        border: 0px;
+    background: transparent;
+}
+
+
+.addClass {
+ width: 20px;
+    height: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    border: 1px solid black;
+    margin-left: 4px;
+      background: transparent;
+}
+
+.thickness {
+ width: 250px;
+    height: 25px;
+    display: inline-flex;
+    margin-top: 15px;
+}
+
+.opacity {
+    width: 250px;
+    height: 25px;
+    display: inline-flex;
+    margin-top: 20px;
+
+}
+
+.text-edit {
+    width: 60px;
+    margin-left: 10px;
+
+}
+
+.brushes-edit {
+    width: 50px;
+    margin-left: 110px;
+    background-color: #AAFFF0;
+    /* border: 1px solid black; */
+}
+
+.range-input {
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 200px;
+    background: #AAFFF0;
+    color: #FDF7C1;
+}
+.main {
+    width: 180px;
+    height: 35px;
+    /* background-color: rgb(0, 0, 0); */
+    padding: 0%;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid black;
+
+}
+
+.twelve {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    margin: 0%;
+    padding: 0%;
+}
+.colors {
+    width: 250px;
+    height: 70px;
+    display: inline-flex;
+}
+
+.twelve-box {
+    width: 200px;
+    height: 60px;
+    position: relative;
+    border: 1px solid black;
+    margin-left: 5px;
+}
+
+
+
+.add {
+    width: 20px;
+    height: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    border: 1px solid black;
+    margin-left: 4px;
+}
+
+.box1 {
+    width: 210px;
+    height: 30px;
+}
+
+.box2 {
+    width: 210px;
+    height: 30px;
+}
+
+

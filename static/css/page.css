@@ -1,0 +1,89 @@
+body{
+	background-color: #E2DBFF;
+	padding: 0;
+	margin: 0;
+    padding-top: 10%;
+}
+
+.box {
+    width: 350px;
+    height: 150px;
+    margin: auto;
+}
+
+.first-page-button{
+	margin: 26px auto;
+	background-color: #FDF7C1;
+	padding:10px 20px;
+	border-radius: 50px;
+	border-width: 0;
+	font-size: 28px;
+	font-family: 'Montserrat', sans-serif;
+	width: 300px;
+	display: block;
+	box-shadow: 10px 10px 10px grey;
+	transition: 0.2s;
+}
+
+
+.first-page-input{
+	margin: 26px auto;
+	background-color: white;
+	padding:15px 20px;
+	border-radius: 50px;
+	border-width: 0;
+	font-size: 24px;
+	font-family: 'Montserrat', sans-serif;
+	width: 300px;
+	display: block;
+	box-shadow: 10px 10px 10px grey;
+	outline: none;
+}
+
+a{
+	text-decoration: none;
+}
+
+.message{
+    position: fixed;
+    bottom:0;
+    left:0;
+    padding: 50px;
+    background-color: blue;
+    font-size: 24px;
+    font-family: Arial;
+
+}
+
+.smallButtons{
+    width: 350px;
+    margin: auto;
+    display: flex;
+}
+
+.small {
+    display: flex-inline;
+    width: 130px;
+    margin-top: 0px;
+}
+
+.first-page-button:hover {
+width: 320px;
+}
+
+.small:hover {
+width: 140px;
+}
+
+.select {
+    margin: 26px auto;
+	background-color: white;
+	padding:15px 20px;
+	border-radius: 50px;
+	border-width: 0;
+	font-size: 24px;
+	font-family: 'Montserrat', sans-serif;
+	width: 340px;
+	display: block;
+	box-shadow: 10px 10px 10px grey;
+}
