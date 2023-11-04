@@ -1,9 +1,11 @@
 {
+  "type": "module",
   "name": "pingo",
   "version": "1.0.0",
   "description": "Cooperative online graphic editor",
   "main": "pingo.js",
   "scripts": {
+    "start": "concurrently \".\\MongoDB\\Server\\bin\\mongod.exe --quiet --dbpath .\\MongoDB\\data\\db\" \"node pingo.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +19,11 @@
   },
   "homepage": "https://github.com/Aziergar/pingo#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "concurrently": "^8.2.2",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "mongoose": "^7.6.3",
+    "socket.io": "^4.7.2"
   }
 }

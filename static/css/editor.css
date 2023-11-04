@@ -1,7 +1,8 @@
 body {
-background-color: #E2DBFF;
- display: grid;
- grid-template-columns: 70% 30%;
+    background-color: #E2DBFF;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    user-select: none;
 }
 
 .panel {
@@ -15,7 +16,8 @@ background-color: #E2DBFF;
     border: 2px solid black;
     border-radius: 15px;
     display: inline-flex;
-    padding-right:20px;
+    padding-right: 20px;
+    overflow: hidden;
 }
 
 .first-column {
@@ -37,7 +39,7 @@ background-color: #E2DBFF;
     width: 40px;
     height: 40px;
     margin-left: 40px;
-    margin-top: 7px;
+    margin-top: 10px;
     border: 0px;
     background: transparent;
 
@@ -46,6 +48,8 @@ background-color: #E2DBFF;
 .box-buttons-panel-left {
     width: 100%;
     margin-right: 10px;
+    height: 100%;
+    overflow: hidden;
 }
 
 
@@ -60,7 +64,8 @@ h1 {
 
 .Right {
     float:right;
-    padding-right: 34px;
+    padding-right: 40px;
+    padding-left: 0px;
 }
 
 .chat {
@@ -75,10 +80,28 @@ h1 {
     height: 180px;
     background-color: #FDF7C1;
     margin-top: 30px;
-    border: 2px solid black;
+    border-left: 0px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    outline: 2px solid black;
     border-radius: 15px;
     padding-left: 10px;
     font-size: 16px;
+    resize: none;
+}
+
+#chat-log::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-log::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 15px;
+}
+
+#chat-log::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .textChat {
@@ -96,6 +119,7 @@ h1 {
     border: 2px solid black;
     border-radius: 15px;
     padding-left: 10px;
+    outline: none;
 }
 
 #chat-message-submit {
