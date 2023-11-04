@@ -5,7 +5,9 @@
   "description": "Cooperative online graphic editor",
   "main": "pingo.js",
   "scripts": {
-    "start": "concurrently \".\\MongoDB\\Server\\bin\\mongod.exe --quiet --dbpath .\\MongoDB\\data\\db\" \"node pingo.js\"",
+    "create_db_dir": "IF not exist .\\MongoDB\\data\\db mkdir .\\MongoDB\\data\\db",
+    "run_db_server": "npm run create_db_dir && .\\MongoDB\\Server\\bin\\mongod.exe --quiet --dbpath .\\MongoDB\\data\\db",
+    "start": "concurrently \"npm run run_db_server\" \"node pingo.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

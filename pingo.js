@@ -1,6 +1,11 @@
 import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import * as f from './functions.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const require = createRequire(import.meta.url);
 
 const fs = require('fs');
 const express = require('express');
