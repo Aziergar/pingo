@@ -1,16 +1,6 @@
-const socket = io('http://' + window.location.host);
-let username11 = 'Alexey';
-
-socket.emit('connection');
-
-socket.on('connection', () =>
+socket.on('message', data =>
 {
-    socket.emit('connected', {name: username11})
-});
-
-socket.on('message', (message) =>
-{
-    document.querySelector('#chat-log').value += (message.name + ': ' + message.message + '\n');
+    document.querySelector('#chat-log').value += (data.name + ': ' + data.message + '\n');
 });
 
 document.querySelector('#chat-message-input').focus();
@@ -20,11 +10,10 @@ document.querySelector('#chat-message-input').onkeyup = function(e) {
     }
 };
 
-
 document.querySelector('#chat-message-submit').onclick = function(e) {
     const messageInputDom = document.querySelector('#chat-message-input');
     const message = messageInputDom.value;
-    if(message.length > 0) socket.emit('message', {name: username11, message: message});
+    if(message.length > 0) socket.emit('message', { room_id : room_id, user_id: user_id, message: message });
     messageInputDom.value = '';
 };
 

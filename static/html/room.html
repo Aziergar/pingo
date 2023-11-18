@@ -6,23 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src = "https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/editor.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="editor.css">
 </head>
 <body style="display:'grid'" >
 <div class="first-column" style="grid-row: '1'">
     <div class="panel" >
         <h1>pingo</h1>
         <div class="box-buttons-panel-left">
-             <input type = "button" class = "Mode" id = "SelectImage"  style="background-image: url(../img/arrow.png); background-size: cover"/>
-             <input type = "button" class = "Mode" id = "Brushes" style="background-image: url(../img/brush.png); background-size: cover" />
-             <input type = "button" class = "Mode" id = "Figures" style="background-image: url(../img/figures.png); background-size: cover" />
-             <input type = "button" class = "Mode" id = "Text" style="background-image: url(../img/text.png); background-size: cover" />
-             <input type = "button" class = "Mode" id = "Download" style ="background-image: url(../img/download.png); background-size: cover" />
+             <input type = "button" class = "Mode" id = "SelectImage"  style="background-image: url(arrow.png); background-size: cover"/>
+             <input type = "button" class = "Mode" id = "Brushes" style="background-image: url(brush.png); background-size: cover" />
+             <input type = "button" class = "Mode" id = "Figures" style="background-image: url(figures.png); background-size: cover" />
+             <input type = "button" class = "Mode" id = "Text" style="background-image: url(text.png); background-size: cover" />
+             <input type = "button" class = "Mode" id = "Download" style ="background-image: url(download.png); background-size: cover" />
              <!--<input type = "button" class = "Mode" id = "Action1" style="background-image: url({% static 'img/action1.png' %}); background-size: cover"/>
              <input type = "button" class = "Mode" id = "Action2" style="background-image: url({% static 'img/action2.png' %}); background-size: cover"/>-->
         </div>
-             <input type = "button" class = "Mode Right" id = "SettingRoom"  style="background-image: url(../img/setting.png); background-size: cover"/>
-             <input type = "button" class = "Mode Right" id = "Exit" style="background-image: url(../img/exit.png); background-size: cover"/>
+             <input type = "button" class = "Mode Right" id = "SettingRoom"  style="background-image: url(setting.png); background-size: cover"/>
+             <input type = "button" class = "Mode Right" id = "Exit" style="background-image: url(exit.png); background-size: cover"/>
     </div>
      <div id = "Content" style = "width: 800px; height: 520px; position: relative; margin: auto; overflow: hidden;"></div>
 </div>
@@ -33,11 +34,11 @@
     <div class="text-text-Setting"> - Brushes - </div>
     <div class="text-Setting">
     <div class="instrumentCase">
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Marker"  style="background-image: url(../img/marker.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Pencil"  style="background-image: url(../img/pencil.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Eraser"  style="background-image: url(../img/eraser.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Spray"  style="background-image: url(../img/spray.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Fill"  style="background-image: url(../img/placeholder.png); background-size: cover"/>
+        <input type = "button" class = "Mode instrumentsBrushes" id = "Marker"  style="background-image: url(marker.png); background-size: cover"/>
+        <input type = "button" class = "Mode instrumentsBrushes" id = "Pencil"  style="background-image: url(pencil.png); background-size: cover"/>
+        <input type = "button" class = "Mode instrumentsBrushes" id = "Eraser"  style="background-image: url(eraser.png); background-size: cover"/>
+        <input type = "button" class = "Mode instrumentsBrushes" id = "Spray"  style="background-image: url(spray.png); background-size: cover"/>
+        <input type = "button" class = "Mode instrumentsBrushes" id = "Fill"  style="background-image: url(placeholder.png); background-size: cover"/>
     </div>
      <div class="thicknessContainer">
      <div class="thickness">
@@ -77,7 +78,7 @@
                     <div style="background:#EB00FF" class="twelve " ></div>
                 </div>
             </div>
-              <input type = "button" class = "addClass" id = "Add"  style="background-image: url(../img/add.png); background-size: cover"/>
+              <input type = "button" class = "addClass" id = "Add"  style="background-image: url(add.png); background-size: cover"/>
         </div>
 </div>
 </div>
@@ -85,10 +86,10 @@
         <div class="text-text-Setting"> - Figures - </div>
         <div class="text-Setting">
         <div class="box-figures-Setting">
-            <input type = "button" class = "Mode figuresIntSetting" id = "Line"  style="background-image: url(../img/line.png); background-size: cover"/>
-            <input type = "button" class = "Mode figuresIntSetting" id = "Rect"  style="background-image: url(../img/square.png); background-size: cover"/>
-            <input type = "button" class = "Mode figuresIntSetting" id = "Ellipse"  style="background-image: url(../img/circle.png); background-size: cover"/>
-            <input type = "button" class = "Mode figuresIntSetting" id = "Triangle"  style="background-image: url(../img/triangle.png); background-size: cover"/>
+            <input type = "button" class = "Mode figuresIntSetting" id = "Line"  style="background-image: url(line.png); background-size: cover"/>
+            <input type = "button" class = "Mode figuresIntSetting" id = "Rect"  style="background-image: url(square.png); background-size: cover"/>
+            <input type = "button" class = "Mode figuresIntSetting" id = "Ellipse"  style="background-image: url(circle.png); background-size: cover"/>
+            <input type = "button" class = "Mode figuresIntSetting" id = "Triangle"  style="background-image: url(triangle.png); background-size: cover"/>
         </div>
         </div>
     </div>
@@ -112,14 +113,14 @@
                                 <input type="color" class="icon-color" />
                         </div>
                         <div class="change-text">
-                            <input type = "button" class = "buttons-text" id = "bold"  style="background-image: url(../img/bold.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text" id = "italic"  style="background-image: url(../img/italic.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text" id = "underline"  style="background-image: url(../img/underline.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text" id = "bold"  style="background-image: url(bold.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text" id = "italic"  style="background-image: url(italic.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text" id = "underline"  style="background-image: url(underline.png); background-size: cover"/>
                         </div>
                         <div class="change-position">
-                            <input type = "button" class = "buttons-text2" id = "leftText"  style="background-image: url(../img/left.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text2" id = "centerText"  style="background-image: url(../img/center.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text2" id = "rightText"  style="background-image: url(../img/right.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text2" id = "leftText"  style="background-image: url(left.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text2" id = "centerText"  style="background-image: url(center.png); background-size: cover"/>
+                            <input type = "button" class = "buttons-text2" id = "rightText"  style="background-image: url(right.png); background-size: cover"/>
                         </div>
                     </div>
                 </div>
@@ -171,11 +172,11 @@
 
     </main>
 </div>
-<script src = "../js/functions.js"></script>
-<script src = "../js/instruments.js"></script>
-<script src = "../js/room.js"></script>
-<script src = "../js/chat.js"></script>
-<script src = "../js/editor.js"></script>
 </div>
+<script src = "functions.js"></script>
+<script src = "instruments.js"></script>
+<script src = "room.js"></script>
+<script src = "chat.js"></script>
+<script src = "editor.js"></script>
 </body>
 </html>

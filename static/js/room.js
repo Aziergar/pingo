@@ -1,11 +1,29 @@
+let room_id = Cookies.get('room_id');
+let user_id = Cookies.get('user_id');
+let user_name = Cookies.get('user_name');
+const socket = io('http://' + window.location.host);
+socket.emit('connection');
+
+socket.on('connected', () =>
+{
+    socket.emit('join-room', { room_id : room_id, user_id : user_id });
+})
+
+let drawData = [];
+
+socket.on('edit-canvas', data =>
+{
+    drawData.push(data.data);
+});
+
 let brushes_display = document.getElementById('brushes_display');
 let text_display= document.getElementById('text_display');
 let figures_display = document.getElementById('figures_display');
 
 let brushes = document.getElementById('Brushes');
-let text = document.getElementById('Text');
+let txt = document.getElementById('Text');
 let figures = document.getElementById('Figures');
-console.log(figures);
+//console.log(figures);
 
 figures.addEventListener('click', (event) => {
     brushes_display.style.display = "none";
@@ -13,7 +31,7 @@ figures.addEventListener('click', (event) => {
     figures_display.style.display = "block";
 });
 
-text.addEventListener('click', (event) => {
+txt.addEventListener('click', (event) => {
     brushes_display.style.display = "none";
     text_display.style.display = "block";
     figures_display.style.display = "none";
@@ -82,12 +100,12 @@ function deleteUser(e){
         })
     );
 }
-let drawData = [];
+//let drawData = [];
 let gotData = false;
 
-var status = JSON.parse(document.getElementById('status').textContent);
-const roomName = JSON.parse(document.getElementById('room-name').textContent);
-const username = JSON.parse(document.getElementById('user-name').textContent);
+//var status = JSON.parse(document.getElementById('status').textContent);
+//const roomName = JSON.parse(document.getElementById('room-name').textContent);
+//const username = JSON.parse(document.getElementById('user-name').textContent);
 
 // const chatSocket = new WebSocket(
 //     'ws://' + window.location.host + '/ws/' + roomName + '/'

@@ -53,11 +53,7 @@ function draw()
     {
         canvas.drawn = true;
         let sendData = canvas.instrument.use();
-        // chatSocket.send(JSON.stringify({
-        //     type: "edit_canvas",
-        //     data: sendData,
-        //     username: username,
-        // }));
+        socket.emit('edit-canvas', { room_id: room_id, sendData: sendData });
     }
     while(drawData.length > 0)
     {

@@ -611,7 +611,7 @@ class Select extends Instrument
             let mouse = canvas.getMouseConstrained();
             this.area.drawRect(this.point1, createVector(mouse.x, mouse.y));
         }
-        //this.username = username;
+        this.username = user_name;
         let layer = this.layer;
         let area = this.area;
         let img = this.img;
