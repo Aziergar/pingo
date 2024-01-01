@@ -168,6 +168,18 @@ class Canvas
         return {x : event.movementX / this.zoom.zoom, y : event.movementY / this.zoom.zoom};
     }
 
+    onInstrumentChange()
+    {
+        thicknessSlider.max = this.instrument.thicknessRange.max;
+        thicknessSlider.min = this.instrument.thicknessRange.min;
+        thicknessSlider.step = this.instrument.thicknessRange.delta;
+        setThickness(this.instrument.thickness, this.instrument);
+        setTransparency(this.instrument.color.a, this.instrument);
+        let disabled = !this.instrument.thicknessRange.enabled();
+        thicknessSlider.disabled = disabled;
+        thicknessText.disabled = disabled;
+    }
+
     setInstrument(name)
     {
         this.instruments.forEach(instrument =>
@@ -177,11 +189,7 @@ class Canvas
                 this.instrument = instrument;
             }
         });
-        thicknessSlider.max = this.instrument.thicknessRange.max;
-        thicknessSlider.min = this.instrument.thicknessRange.min;
-        thicknessSlider.step = this.instrument.thicknessRange.delta;
-        setThickness(this.instrument.thickness, this.instrument);
-        setTransparency(this.instrument.color.a, this.instrument);
+        this.onInstrumentChange();
     }
 
     mouseInCanvas()
@@ -215,6 +223,8 @@ class Thickness
         this.max = max;
         this.delta = delta;
     }
+
+    enabled = () => this.max != 0; 
 }
 
 class Instrument
