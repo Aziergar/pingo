@@ -2,46 +2,52 @@ let thicknessSlider;
 let thicknessText;
 let transparencySlider;
 let transparencyText;
+let palette;
 
 function setup()
 {
-    thicknessSlider = document.getElementById("ThicknessSlider");
-    thicknessText = document.getElementById("ThicknessText");
-    transparencySlider = document.getElementById("TransparencySlider");
-    transparencyText = document.getElementById("TransparencyText");
+    thicknessSlider = document.getElementById('ThicknessSlider');
+    thicknessText = document.getElementById('ThicknessText');
+    transparencySlider = document.getElementById('TransparencySlider');
+    transparencyText = document.getElementById('TransparencyText');
+    palette = document.getElementById('Palette');
     transparencySlider.max = 255;
     transparencySlider.min = 0;
     transparencySlider.step = 1;
 
     canvas.setup("Content", 800, 600);
-    Array.from(document.getElementsByClassName("Mode")).forEach(button =>
+    Array.from(document.getElementsByClassName('Mode')).forEach(button =>
     {
-        button.addEventListener("click", () =>
+        button.addEventListener('click', () =>
         {
             canvas.setInstrument(button.id);
         });
     });
-    document.addEventListener("copy", copyFunction);
-    document.addEventListener("paste", pasteFunction);
-    document.getElementById("Download").addEventListener("click", () =>
+    document.addEventListener('copy', copyFunction);
+    document.addEventListener('paste', pasteFunction);
+    document.getElementById("Download").addEventListener('click', () =>
     {
-        saveCanvas(canvas.canvas, createFileName(), "png");
+        saveCanvas(canvas.canvas, createFileName(), 'png');
     });
-    thicknessSlider.addEventListener("change", () =>
+    thicknessSlider.addEventListener('change', () =>
     {
         setThickness(thicknessSlider.value);
     });
-    thicknessText.addEventListener("change", () =>
+    thicknessText.addEventListener('change', () =>
     {
         setThickness(thicknessText.value);
     });
-    transparencySlider.addEventListener("change", () =>
+    transparencySlider.addEventListener('change', () =>
     {
         setTransparency(transparencySlider.value);
     });
-    transparencyText.addEventListener("change", () =>
+    transparencyText.addEventListener('change', () =>
     {
         setTransparency(transparencyText.value);
+    });
+    palette.addEventListener('change', () =>
+    {
+        setColor(Color.fromHex(palette.getValue()));
     });
 }
 
@@ -64,8 +70,8 @@ function draw()
             instrument = canvas.dataInstruments.find(element => element.name == data.name && element.username == data.username);
             if(!instrument)
             {
-                canvas.dataInstruments.push(data.name == "SelectImage" ? new SelectImage("SelectImage", canvas.onlineLayer)
-                                                                       : new Text("Text", canvas.onlineLayer));
+                canvas.dataInstruments.push(data.name == 'SelectImage' ? new SelectImage('SelectImage', canvas.onlineLayer)
+                                                                       : new Text('Text', canvas.onlineLayer));
                 instrument = canvas.dataInstruments[canvas.dataInstruments.length - 1];
                 instrument.username = data.username;
             }

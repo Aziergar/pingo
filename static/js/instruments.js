@@ -8,6 +8,17 @@ class Color
         this.a = a;
     }
 
+    static fromHex(hex)
+    {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? 
+            new Color(
+                parseInt(result[1], 16), 
+                parseInt(result[2], 16), 
+                parseInt(result[3], 16))
+            : null;
+    }
+
     isEqual(color, deviation = 0)
     {
         if (Math.abs(this.r - color.r) / 255 > deviation) return false;
@@ -175,9 +186,12 @@ class Canvas
         thicknessSlider.step = this.instrument.thicknessRange.delta;
         setThickness(this.instrument.thickness, this.instrument);
         setTransparency(this.instrument.color.a, this.instrument);
-        let disabled = !this.instrument.thicknessRange.enabled();
-        thicknessSlider.disabled = disabled;
-        thicknessText.disabled = disabled;
+        let thicknessDisabled = !this.instrument.thicknessRange.enabled();
+        thicknessSlider.disabled = thicknessDisabled;
+        thicknessText.disabled = thicknessDisabled;
+        let transparencyDisabled = this.instrument.constTransparency;
+        transparencySlider.disabled = transparencyDisabled;
+        transparencyText.disabled = transparencyDisabled;
     }
 
     setInstrument(name)
@@ -229,12 +243,13 @@ class Thickness
 
 class Instrument
 {
-    constructor(name, thickness = new Thickness(1, 1), color = black)
+    constructor(name, thickness = new Thickness(1, 1), color = black, colorable = true)
     {
         this.color = color;
         this.name = name;
         this.thickness = thickness.min;
         this.thicknessRange = thickness;
+        this.colorable = colorable;
     }
 
     applyForLine(func, mouse, pmouse)
@@ -329,7 +344,7 @@ class Eraser extends Pencil
 {
     constructor(name, thickness)
     {
-        super(name, thickness, canvas.color);
+        super(name, thickness, canvas.color, false);
         this.constTransparency = true;
     }
 }
@@ -490,7 +505,7 @@ class Select extends Instrument
 {
     constructor(name, layer, isTransparent = false)
     {
-        super(name, new Thickness(0, 0, 0), canvas.color);
+        super(name, new Thickness(0, 0, 0), canvas.color, false);
         this.layer = layer;
         this.isTransparent = isTransparent;
         this.point1 = createVector(0, 0);

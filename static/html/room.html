@@ -58,28 +58,7 @@
                 <input type="range" class="range-input" id = "TransparencySlider" min="1" max="255" value="127">
             </div>
         </div>
-        <input type="color" class="main" />
-        <div class="colors">
-            <div class="twelve-box">
-                <div class="box1">
-                    <div style="background:#FFFFFF" class="twelve " ></div>
-                    <div style="background:#C8C8C2" class="twelve " ></div>
-                    <div style="background:#605F54" class="twelve " ></div>
-                    <div style="background:#030303" class="twelve " ></div>
-                    <div style="background:#B12B2B" class="twelve " ></div>
-                    <div style="background:#FF0000" class="twelve " ></div>
-                </div>
-                <div class="box2">
-                    <div style="background:#FFC700 " class="twelve " ></div>
-                    <div style="background:#FFF500" class="twelve " ></div>
-                    <div style="background:#24FF00" class="twelve " ></div>
-                    <div style="background:#00FFF0" class="twelve " ></div>
-                    <div style="background:#0047FF" class="twelve " ></div>
-                    <div style="background:#EB00FF" class="twelve " ></div>
-                </div>
-            </div>
-              <input type = "button" class = "addClass" id = "Add"  style="background-image: url(add.png); background-size: cover"/>
-        </div>
+        <color-palette id = "Palette" rows = "4" columns = "8"></color-palette>
 </div>
 </div>
     <div class="settingInstruments" id="figures_display" style="display:block;">
@@ -173,6 +152,7 @@
     </main>
 </div>
 </div>
+<script src = "palette.js"></script>
 <script src = "functions.js"></script>
 <script src = "instruments.js"></script>
 <script src = "room.js"></script>

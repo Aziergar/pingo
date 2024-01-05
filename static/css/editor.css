@@ -258,17 +258,6 @@ height: 150px;
     background: transparent;
 }
 
-
-.addClass {
- width: 20px;
-    height: 20px;
-    margin-top: auto;
-    margin-bottom: auto;
-    border: 1px solid black;
-    margin-left: 4px;
-      background: transparent;
-}
-
 .thickness {
  width: 250px;
     height: 25px;
@@ -304,37 +293,12 @@ height: 150px;
     background: #AAFFF0;
     color: #FDF7C1;
 }
-.main {
-    width: 180px;
-    height: 35px;
-    /* background-color: rgb(0, 0, 0); */
-    padding: 0%;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid black;
 
-}
-
-.twelve {
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    margin: 0%;
-    padding: 0%;
-}
-.colors {
-    width: 250px;
-    height: 70px;
-    display: inline-flex;
-}
-
-.twelve-box {
+color-palette {
     width: 200px;
-    height: 60px;
-    position: relative;
-    border: 1px solid black;
-    margin-left: 5px;
+    height: 100px;
+    margin: 10px;
+    margin-top: 15px;
 }
 
 

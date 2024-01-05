@@ -438,3 +438,15 @@ function setTransparency(newValue, instrument)
     transparencySlider.value = newValue;
     transparencyText.value = newValue;
 }
+
+function setColor(newValue, instrument)
+{
+    if(!instrument)
+    {
+        canvas.instruments.forEach(el =>
+        {
+            if(el.colorable) el.color = newValue; 
+        });
+    }
+    else instrument.color = value;
+}
