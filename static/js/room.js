@@ -16,6 +16,23 @@ socket.on('edit-canvas', data =>
     drawData.push(data.data);
 });
 
+document.getElementsByClassName('settingInstruments').forEach(el => 
+{
+    let view_control_button = document.createElement('div');
+    view_control_button.setAttribute('class', 'view-control-button');
+    view_control_button.addEventListener('click', () =>
+    {
+        document.getElementsByClassName('chat')[0].classList.toggle('hidden-right');
+        document.getElementsByClassName('settingInstruments').forEach(element =>
+        {
+            let button = element.getElementsByClassName('view-control-button')[0];
+            element.classList.toggle('hidden-right');
+            button.classList.toggle('view-control-button-open');
+        });
+    });
+    el.appendChild(view_control_button)
+});
+
 let brushes_display = document.getElementById('brushes_display');
 let text_display= document.getElementById('text_display');
 let figures_display = document.getElementById('figures_display');
