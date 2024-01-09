@@ -11,7 +11,7 @@
 </head>
 <body style="display:'grid'" >
 <div class="first-column" style="grid-row: '1'">
-    <div class="panel" >
+    <div class="panel control" >
         <h1>pingo</h1>
         <div class="box-buttons-panel-left">
              <input type = "button" class = "Mode" id = "SelectImage"  style="background-image: url(arrow.png); background-size: cover"/>
@@ -30,7 +30,7 @@
 
 <div class="second-column" style="grid-row: '1'">
 
-<div class="settingInstruments" id="brushes_display" style="display:none;">
+<div class="settingInstruments control" id="brushes_display" style="display:none;">
     <div class="text-text-Setting"> - Brushes - </div>
     <div class="text-Setting">
     <div class="instrumentCase">
@@ -61,7 +61,7 @@
         <color-palette id = "Palette" rows = "4" columns = "8"></color-palette>
 </div>
 </div>
-    <div class="settingInstruments" id="figures_display" style="display:block;">
+    <div class="settingInstruments control" id="figures_display" style="display:block;">
         <div class="text-text-Setting"> - Figures - </div>
         <div class="text-Setting">
         <div class="box-figures-Setting">
@@ -72,7 +72,7 @@
         </div>
         </div>
     </div>
-    <div class="settingInstruments" id="text_display" style="display:none;">
+    <div class="settingInstruments control" id="text_display" style="display:none;">
         <div class="text-text-Setting"> - Text - </div>
                 <div class="text-Setting">
                     <div class="box-text">
@@ -106,7 +106,7 @@
     </div>
 
 
-    <div class="settingRoomInfo" id="settingRoomInfo">
+    <div class="settingRoomInfo control" id="settingRoomInfo">
 
         Your name:{{username}} {{username|json_script:"user-name"}}<br>
         Your status:<span id="my_status"> {{status}} {{status|json_script:"status"}}</span><br>
@@ -140,7 +140,7 @@
             </ul>
         </div>
     </div>
-    <div class="chat">
+    <div class="chat control">
         <textarea readonly id="chat-log" cols="100" rows="20"></textarea>
         <div class="textChat" >
             <input id="chat-message-input" type="text" size="100">

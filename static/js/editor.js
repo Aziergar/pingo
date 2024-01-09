@@ -3,6 +3,7 @@ let thicknessText;
 let transparencySlider;
 let transparencyText;
 let palette;
+let mouseOverControl = false;
 
 function setup()
 {
@@ -14,6 +15,12 @@ function setup()
     transparencySlider.max = 255;
     transparencySlider.min = 0;
     transparencySlider.step = 1;
+
+    document.getElementsByClassName('control').forEach(control =>
+    {
+       control.addEventListener('mouseenter', () => mouseOverControl = true);
+       control.addEventListener('mouseleave', () => mouseOverControl = false);
+    });
 
     canvas.setup("Content", 800, 600);
     Array.from(document.getElementsByClassName('Mode')).forEach(button =>

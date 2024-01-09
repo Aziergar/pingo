@@ -220,6 +220,7 @@ class Canvas
 
     drawCheck()
     {
+        if(mouseOverControl) return false;
         if(!mouseIsPressed) return false;
         if(mouseButton != LEFT) return false;
         if(!this.mouseInCanvas()) return false;
