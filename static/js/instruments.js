@@ -530,7 +530,7 @@ class Spray extends Instrument
 
                 let a = 255 * (1 - sqrt(pow(randX, 2) + pow(randY, 2)) / r);
                 a = min(255, a * deltaTime / (lerps * 10));
-                stroke(0, 0, 0, a);
+                stroke(this.color.r, this.color.g, this.color.b, a * (this.color.a) / 255);
                 point(lerpX + randX, lerpY + randY);
             }
         }
