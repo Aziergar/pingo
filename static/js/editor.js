@@ -3,7 +3,9 @@ let thicknessText;
 let transparencySlider;
 let transparencyText;
 let palette;
+let mousePressedOverControl = false;
 let mouseOverControl = false;
+let mouseIsReleased = false;
 
 function setup()
 {
@@ -60,6 +62,7 @@ function setup()
 
 function draw()
 {
+    canvas.beforeDraw();
     canvas.outerLayer.clear();
     canvas.onlineLayer.clear();
     if (canvas.drawCheck())
@@ -68,6 +71,7 @@ function draw()
         let sendData = canvas.instrument.use();
         socket.emit('edit-canvas', { room_id: room_id, sendData: sendData });
     }
+    mouseIsReleased = false;
     while(drawData.length > 0)
     {
         let instrument;
@@ -77,10 +81,25 @@ function draw()
             instrument = canvas.dataInstruments.find(element => element.name == data.name && element.username == data.username);
             if(!instrument)
             {
-                canvas.dataInstruments.push(data.name == 'SelectImage' ? new SelectImage('SelectImage', canvas.onlineLayer)
-                                                                       : new Text('Text', canvas.onlineLayer));
-                instrument = canvas.dataInstruments[canvas.dataInstruments.length - 1];
+                switch(data.name)
+                {
+                    case 'SelectImage':
+                        instrument = new SelectImage('SelectImage', canvas.onlineLayer);
+                        break;
+                    case 'Text':
+                        instrument = new Text('Text', canvas.onlineLayer);
+                        break;
+                    case 'Line':
+                        instrument = new Line('Line', canvas.onlineLayer);
+                        break;
+                    case 'Rect':
+                        instrument = new Rect('Rect', canvas.onlineLayer);
+                        break;
+                    case 'Ellipse':
+                        instrument = new Ellipse('Ellipse', canvas.onlineLayer);
+                }
                 instrument.username = data.username;
+                canvas.dataInstruments.push(instrument);
             }
         }
         else instrument = canvas.dataInstruments.find(element => element.name == data.name);
@@ -88,16 +107,20 @@ function draw()
     }
     canvas.dataInstruments.forEach(instrument =>
     {
-        if(instrument.selected)
+        if(instrument.selected || instrument.readyToDraw)
         {
             instrument.onDraw();
         }
     });
     canvas.instrument.drawEachFrame();
+    canvas.afterDraw();
 }
 
 function mouseReleased()
 {
+    mouseIsReleased = true;
+    if(mouseOverControl && mousePressedOverControl) canvas.instrument.mousePressed();
+    mousePressedOverControl = false;
     canvas.instrument.mouseReleased();
     if(canvas.drawn)
     {
@@ -113,6 +136,11 @@ function mouseDragged(event)
 
 function mousePressed()
 {
+    if(mouseOverControl) 
+    {
+        mousePressedOverControl = true;
+        return;
+    }
     canvas.instrument.mousePressed();
 }
 

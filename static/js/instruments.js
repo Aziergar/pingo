@@ -72,6 +72,8 @@ class Canvas
         this.translate = { x : 0, y : 0};
         this.origin = { x : 0, y : 0};
         this.canvasRect = this.canvas.elt.getBoundingClientRect();
+        this.beforeDrawFuncs = [];
+        this.afterDrawFuncs = [];
         background(color.r, color.g, color.b, color.a);
         this.instruments = [new SelectImage("SelectImage", this.outerLayer, true),
                             new Text("Text", this.outerLayer),
@@ -80,21 +82,56 @@ class Canvas
                             new Pencil("Pencil", new Thickness(1, 5), new Color(0, 0, 0, 255)),
                             new Spray("Spray", new Thickness(10, 100), new Color(0, 0, 0, 255)),
                             new Eraser("Eraser", new Thickness(10, 100)),
-                            new Line("Line", new Thickness(1, 20)),
-                            new Rect("Rect", new Thickness(1, 20)),
-                            new Ellipse("Ellipse", new Thickness(1, 20))];
+                            new Line("Line", this.outerLayer, new Thickness(1, 20)),
+                            new Rect("Rect", this.outerLayer, new Thickness(1, 20)),
+                            new Ellipse("Ellipse", this.outerLayer, new Thickness(1, 20))];
         this.dataInstruments = [new SelectImage("SelectImage"),
                                 new Text("Text"),
                                 new Marker("Marker"),
                                 new Fill("Fill"),
                                 new Pencil("Pencil"),
                                 new Spray("Spray"),
-                                new Eraser("Eraser"),
-                                new Line("Line"),
-                                new Rect("Rect"),
-                                new Ellipse("Ellipse")];
+                                new Eraser("Eraser")];
         this.setInstrument("Marker");
         this.canvas.loadPixels();
+    }
+
+    beforeDraw()
+    {
+        this.beforeDrawFuncs.forEach(func => func());
+        this.beforeDrawFuncs = [];
+    }
+
+    afterDraw()
+    {
+        this.afterDrawFuncs.forEach(func => func());
+        this.afterDrawFuncs = [];
+    }
+
+    doBeforeDraw(func)
+    {
+        this.beforeDrawFuncs.push(func);
+    }
+
+    doAfterDraw(func)
+    {
+        this.afterDrawFuncs.push(func);
+    }
+
+    setSelectImage(point1, point2, layer = canvas.outerLayer)
+    {
+        this.doBeforeDraw(() =>
+        {
+            let instrument = canvas.instruments.find(el => el.name == 'SelectImage');
+            instrument.img = new Img(point1, point2, layer);
+            instrument.point1 = point1;
+            instrument.point2 = point2;
+            instrument.selected = true;
+            instrument.onSelectCalled = true;
+            instrument.changedSourceLayer = true;
+        });
+
+        this.doAfterDraw(() => canvas.setInstrument("SelectImage"));
     }
 
     addLayer(element)
@@ -220,8 +257,8 @@ class Canvas
 
     drawCheck()
     {
-        if(mouseOverControl) return false;
-        if(!mouseIsPressed) return false;
+        if(!mouseIsPressed && !mouseIsReleased) return false;
+        if(mouseOverControl && !this.instrument.selected && !this.instrument.readyToDraw) return false;
         if(mouseButton != LEFT) return false;
         if(!this.mouseInCanvas()) return false;
         return true;
@@ -288,12 +325,13 @@ class Instrument
         this.name = instrumentData.name;
         this.thicknessRange = instrumentData.thicknessRange;
         this.thickness = instrumentData.thickness;
-        this.color = instrumentData.color;
+        this.color = new Color(instrumentData.color.r, instrumentData.color.g, instrumentData.color.b, instrumentData.color.a);
+        this.data = instrumentData.data;
+        this.readyToDraw = instrumentData.readyToDraw;
     }
 
     useData(instrumentData)
     {
-        instrumentData.color = new Color(instrumentData.color.r, instrumentData.color.g, instrumentData.color.b, instrumentData.color.a);
         this.applyData(instrumentData);
         this.use(instrumentData.data);
     }
@@ -604,7 +642,12 @@ class Select extends Instrument
             this.selected = true;
             let mouse = canvas.getMouseConstrained();
             this.point2 = createVector(mouse.x, mouse.y);
-            if(this.point1.x == this.point2.x || this.point1.y == this.point2.y) this.selected = false;
+            if((this.point1.x == this.point2.x || this.point1.y == this.point2.y) && 
+               (!this.allowZeroSize || (this.point1.x == this.point2.x && this.point1.y == this.point2.y))) 
+            {
+                this.selected = false;
+                this.point2 = null;
+            }
             else this.onSelect();
         }
     }
@@ -613,13 +656,13 @@ class Select extends Instrument
     {
         super.applyData(data);
         this.point1 = createVector(data.point1.x, data.point1.y);
-        this.point2 = createVector(data.point2.x, data.point2.y);
+        this.point2 = data.point2 ? createVector(data.point2.x, data.point2.y) : null;
         this.isTransparent = data.isTransparent;
         this.selected = data.selected;
-        this.onSelectCalled = data.onSelectCalled;
         this.onDeselectCalled = data.onDeselectCalled;
         this.onSelectCalled = data.onSelectCalled;
         this.onFlipCalled = data.onFlipCalled;
+        this.changedSourceLayer = data.changedSourceLayer;
         this.axis = data.axis;
         if(this.img && data.img)
         {
@@ -656,7 +699,6 @@ class Select extends Instrument
 
     useData(data)
     {
-        data.color = new Color(data.color.r, data.color.g, data.color.b, data.color.a);
         this.applyData(data);
         if(this.onSelectCalled) this.onSelect();
         if(this.onDeselectCalled) this.onDeselect();
@@ -708,6 +750,8 @@ class SelectImage extends Select
     {
         this.onDeselectCalled = true;
         this.img.draw(canvas.canvas, this.img.x, this.img.y, this.img.w, this.img.h);
+        this.point2 = null;
+        this.readyToDraw = false;
     }
 
     onFlip(axis)
@@ -843,100 +887,111 @@ class Text extends Select
     }
 }
 
-class Primitive extends Instrument
+class Primitive extends SelectImage
 {
-    constructor(name, thickness = new Thickness(1, 1), color = black)
+    constructor(name, layer = canvas.outerLayer, thickness = new Thickness(1, 1), color = black)
     {
-        super(name, thickness, color);
-        this.drawnPoints = 0;
-        this.points = [];
+        super(name, layer, true);
+        this.color = color;
+        this.thickness = thickness.min;
+        this.thicknessRange = thickness;
+        this.point2 = null;
+        this.allowZeroSize = true;
     }
 
-    onDone(){}
-    onDraw(){}
-
-    mousePressed()
+    onSelect()
     {
-        let mouse = canvas.getMouse();
-        this.points[this.drawnPoints] = createVector(mouse.x, mouse.y);
-        this.drawnPoints++;
-        if(this.drawnPoints == this.points.length)
-        {
-            this.drawnPoints = 0;
-            this.onDone();
-        }
+        this.onSelectCalled = true;
+        let i1 = this.point1.x < this.point2.x ? -1 : 1;
+        this.point1.x += i1 * this.thickness;
+        this.point2.x += -i1 * this.thickness;
+        i1 = this.point1.y < this.point2.y ? -1 : 1;
+        this.point1.y += i1 * this.thickness;
+        this.point2.y += -i1 * this.thickness;
+        this.layer.loadPixels();
+        this.img = new Img(this.point1, this.point2, this.layer);
+        if(this.isTransparent) this.img.replaceColor(canvas.color, transparent);
     }
 
-    use(){}
+    draw(){}
 
-    drawEachFrame()
+    use()
     {
-        canvas.outerLayer.push();
-        canvas.outerLayer.fill(color(255, 255, 255, 0));
-        canvas.outerLayer.stroke(color(this.color.r, this.color.g, this.color.b, this.color.a));
-        canvas.outerLayer.strokeCap(ROUND);
-        canvas.outerLayer.strokeWeight(this.thickness);
-        this.onDraw();
-        canvas.outerLayer.pop();
+        if(!this.selected) this.onDraw();
+        this.username = user_name;
+        this.readyToDraw = true;
+        let layer = this.layer;
+        let area = this.area;
+        let img = this.img;
+        if(img) this.img = {x : img.x, y : img.y, w : img.w, h : img.h};
+        this.area = null;
+        this.layer = null;
+        let data = JSON.stringify(this);
+        this.layer = layer;
+        this.area = area;
+        this.img = img;
+        this.onSelectCalled = false;
+        this.onDeselectCalled = false;
+        this.onFlipCalled = false;
+        return data;
     }
-}
 
-class Line extends Primitive
-{
-    constructor(name, thickness = new Thickness(1, 1), color = black)
+    useData(data)
     {
-        super(name, thickness, color);
-        this.points = [createVector(0, 0), createVector(0, 0)];
+        if(data.onSelectCalled) this.onDraw();
+        super.useData(data);
     }
 
     onDraw()
     {
-        if(this.drawnPoints == 1)
+        if(this.selected)
         {
-            let mouse = canvas.getMouse();
-            canvas.outerLayer.line(this.points[this.drawnPoints - 1].x, this.points[this.drawnPoints - 1].y, mouse.x, mouse.y);
+            super.onDraw();
+            return;
         }
+        this.layer.push();
+        this.layer.fill(color(255, 255, 255, 0));
+        this.layer.stroke(color(this.color.r, this.color.g, this.color.b, this.color.a));
+        this.layer.strokeCap(ROUND);
+        this.layer.strokeWeight(this.thickness);
+        this.draw();
+        this.layer.pop();
     }
 
-    onDone()
+    drawEachFrame()
     {
-        canvas.setInstrument("SelectImage");
-        let i1 = this.points[0].x < this.points[1].x ? -1 : 1;
-        this.points[0].x += i1 * this.thickness;
-        this.points[1].x += -i1 * this.thickness;
-        i1 = this.points[0].y < this.points[1].y ? -1 : 1;
-        this.points[0].y += i1 * this.thickness;
-        this.points[1].y += -i1 * this.thickness;
-        canvas.instrument.img = new Img(this.points[0], this.points[1], canvas.outerLayer);
-        canvas.instrument.point1 = this.points[0];
-        canvas.instrument.point2 = this.points[1];
-        canvas.instrument.selected = true;
+        if(this.selected) super.drawEachFrame();
+    }
+
+    getPoint2 = () => this.point2 ? this.point2 : this.point1; 
+}
+
+class Line extends Primitive
+{
+    draw()
+    {
+        let point2 = this.getPoint2();
+        this.layer.line(this.point1.x, this.point1.y, point2.x, point2.y);
     }
 }
 
 class Rect extends Line
 {
-    onDraw()
+    draw()
     {
-        if(this.drawnPoints == 1)
-        {
-            canvas.outerLayer.rectMode(CORNERS);
-            let mouse = canvas.getMouse();
-            canvas.outerLayer.rect(this.points[this.drawnPoints - 1].x, this.points[this.drawnPoints - 1].y, mouse.x, mouse.y);
-        }
+        let point2 = this.getPoint2();
+        this.layer.rectMode(CORNERS);
+        this.layer.rect(this.point1.x, this.point1.y, point2.x, point2.y);
     }
 }
 
 class Ellipse extends Line
 {
-    onDraw()
+    draw()
     {
-        if(this.drawnPoints == 1)
-        {
-            canvas.outerLayer.ellipseMode(CORNERS);
-            let mouse = canvas.getMouse();
-            canvas.outerLayer.ellipse(this.points[this.drawnPoints - 1].x, this.points[this.drawnPoints - 1].y, mouse.x, mouse.y);
-        }
+        let point2 = this.getPoint2();
+        this.layer.ellipseMode(CORNERS);
+        this.layer.ellipse(this.point1.x, this.point1.y, point2.x, point2.y);
     }
 }
 
