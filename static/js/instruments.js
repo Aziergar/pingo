@@ -260,7 +260,7 @@ class Canvas
         if(!mouseIsPressed && !mouseIsReleased) return false;
         if(mouseOverControl && !this.instrument.selected && !this.instrument.readyToDraw) return false;
         if(mouseButton != LEFT) return false;
-        if(!this.mouseInCanvas()) return false;
+        if(!this.mouseInCanvas() && !this.instrument.selected && !this.instrument.readyToDraw) return false;
         return true;
     }
 }
@@ -547,7 +547,7 @@ class Select extends Instrument
         super(name, new Thickness(0, 0, 0), canvas.color, false);
         this.layer = layer;
         this.isTransparent = isTransparent;
-        this.point1 = createVector(0, 0);
+        this.point1 = null;
         this.point2 = createVector(0, 0);
         this.area = new DashedLine(layer);
         this.selected = false;
@@ -646,6 +646,7 @@ class Select extends Instrument
                (!this.allowZeroSize || (this.point1.x == this.point2.x && this.point1.y == this.point2.y))) 
             {
                 this.selected = false;
+                this.point1 = null;
                 this.point2 = null;
             }
             else this.onSelect();
@@ -655,7 +656,7 @@ class Select extends Instrument
     applyData(data)
     {
         super.applyData(data);
-        this.point1 = createVector(data.point1.x, data.point1.y);
+        this.point1 = data.point1 ? createVector(data.point1.x, data.point1.y) : null;
         this.point2 = data.point2 ? createVector(data.point2.x, data.point2.y) : null;
         this.isTransparent = data.isTransparent;
         this.selected = data.selected;
@@ -675,7 +676,7 @@ class Select extends Instrument
 
     use()
     {
-        if(!this.selected)
+        if(!this.selected && this.point1)
         {
             let mouse = canvas.getMouseConstrained();
             this.area.drawRect(this.point1, createVector(mouse.x, mouse.y));
@@ -707,31 +708,35 @@ class Select extends Instrument
 
     drawEachFrame()
     {
-        if(this.selected)
+        if(!this.selected)
         {
-            this.onDraw();
-            this.area.patternOffset += deltaTime / 40;
-            this.point1.x = this.img.x;
-            this.point1.y = this.img.y;
-            this.point2.x = this.img.x + this.img.w;
-            this.point2.y = this.img.y + this.img.h;
-            this.area.drawRect(this.point1, this.point2);
-            this.layer.push();
-            this.layer.rectMode(CENTER);
-            this.layer.stroke(0);
-            this.layer.strokeWeight(constrain(1 / canvas.zoom.zoom, 1, 100));
-            this.layer.fill(color(255, 255, 255, 100));
-            let width = constrain(10 / canvas.zoom.zoom, 4, 100);
-            if(this.scalePositions.includes("LEFT-TOP")) this.layer.rect(this.img.x, this.img.y, width);
-            if(this.scalePositions.includes("LEFT-BOTTOM")) this.layer.rect(this.img.x, this.img.y + this.img.h, width);
-            if(this.scalePositions.includes("RIGHT-TOP")) this.layer.rect(this.img.x + this.img.w, this.img.y, width);
-            if(this.scalePositions.includes("RIGHT-BOTTOM")) this.layer.rect(this.img.x + this.img.w, this.img.y + this.img.h, width);
-            if(this.scalePositions.includes("LEFT-CENTER")) this.layer.rect(this.img.x, this.img.y + this.img.h / 2, width);
-            if(this.scalePositions.includes("TOP-CENTER")) this.layer.rect(this.img.x + this.img.w / 2, this.img.y, width);
-            if(this.scalePositions.includes("RIGHT-CENTER")) this.layer.rect(this.img.x + this.img.w, this.img.y + this.img.h / 2, width);
-            if(this.scalePositions.includes("BOTTOM-CENTER")) this.layer.rect(this.img.x + this.img.w / 2, this.img.y + this.img.h, width);
-            this.layer.pop();
+            if(!this.point1) return;
+            let mouse = canvas.getMouseConstrained();
+            this.area.drawRect(this.point1, createVector(mouse.x, mouse.y));
+            return;
         }
+        this.onDraw();
+        this.area.patternOffset += deltaTime / 40;
+        this.point1.x = this.img.x;
+        this.point1.y = this.img.y;
+        this.point2.x = this.img.x + this.img.w;
+        this.point2.y = this.img.y + this.img.h;
+        this.area.drawRect(this.point1, this.point2);
+        this.layer.push();
+        this.layer.rectMode(CENTER);
+        this.layer.stroke(0);
+        this.layer.strokeWeight(constrain(1 / canvas.zoom.zoom, 1, 100));
+        this.layer.fill(color(255, 255, 255, 100));
+        let width = constrain(10 / canvas.zoom.zoom, 4, 100);
+        if(this.scalePositions.includes("LEFT-TOP")) this.layer.rect(this.img.x, this.img.y, width);
+        if(this.scalePositions.includes("LEFT-BOTTOM")) this.layer.rect(this.img.x, this.img.y + this.img.h, width);
+        if(this.scalePositions.includes("RIGHT-TOP")) this.layer.rect(this.img.x + this.img.w, this.img.y, width);
+        if(this.scalePositions.includes("RIGHT-BOTTOM")) this.layer.rect(this.img.x + this.img.w, this.img.y + this.img.h, width);
+        if(this.scalePositions.includes("LEFT-CENTER")) this.layer.rect(this.img.x, this.img.y + this.img.h / 2, width);
+        if(this.scalePositions.includes("TOP-CENTER")) this.layer.rect(this.img.x + this.img.w / 2, this.img.y, width);
+        if(this.scalePositions.includes("RIGHT-CENTER")) this.layer.rect(this.img.x + this.img.w, this.img.y + this.img.h / 2, width);
+        if(this.scalePositions.includes("BOTTOM-CENTER")) this.layer.rect(this.img.x + this.img.w / 2, this.img.y + this.img.h, width);
+        this.layer.pop();
     }
 }
 
@@ -750,6 +755,7 @@ class SelectImage extends Select
     {
         this.onDeselectCalled = true;
         this.img.draw(canvas.canvas, this.img.x, this.img.y, this.img.w, this.img.h);
+        this.point1 = null;
         this.point2 = null;
         this.readyToDraw = false;
     }
@@ -917,7 +923,7 @@ class Primitive extends SelectImage
 
     use()
     {
-        if(!this.selected) this.onDraw();
+        if(!this.selected && this.point1) this.onDraw();
         this.username = user_name;
         this.readyToDraw = true;
         let layer = this.layer;
@@ -938,7 +944,7 @@ class Primitive extends SelectImage
 
     useData(data)
     {
-        if(data.onSelectCalled) this.onDraw();
+        if(data.onSelectCalled && this.point1) this.onDraw();
         super.useData(data);
     }
 
@@ -949,6 +955,7 @@ class Primitive extends SelectImage
             super.onDraw();
             return;
         }
+        if(!this.point1) return;
         this.layer.push();
         this.layer.fill(color(255, 255, 255, 0));
         this.layer.stroke(color(this.color.r, this.color.g, this.color.b, this.color.a));
@@ -961,6 +968,7 @@ class Primitive extends SelectImage
     drawEachFrame()
     {
         if(this.selected) super.drawEachFrame();
+        else if(this.point1) this.onDraw();
     }
 
     getPoint2 = () => this.point2 ? this.point2 : this.point1; 
