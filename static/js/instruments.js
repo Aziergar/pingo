@@ -85,9 +85,7 @@ class Canvas
                             new Line("Line", this.outerLayer, new Thickness(1, 20)),
                             new Rect("Rect", this.outerLayer, new Thickness(1, 20)),
                             new Ellipse("Ellipse", this.outerLayer, new Thickness(1, 20))];
-        this.dataInstruments = [new SelectImage("SelectImage"),
-                                new Text("Text"),
-                                new Marker("Marker"),
+        this.dataInstruments = [new Marker("Marker"),
                                 new Fill("Fill"),
                                 new Pencil("Pencil"),
                                 new Spray("Spray"),
@@ -566,6 +564,7 @@ class Select extends Instrument
 
     onSelect()
     {
+        this.onSelectCalled = true;
         this.img = new Img(this.point1, this.point2, this.color);
     }
     onDeselect() {}
@@ -779,7 +778,7 @@ class Text extends Select
     {
         super(name, layer);
 
-        this.deselected = false;
+        this.text = "";
 
         this.movePositions = ["LEFT", "RIGHT", "TOP", "BOTTOM"];
         this.scalePositions = [];
@@ -825,32 +824,83 @@ class Text extends Select
         element.style("font-weight:", bold ? "bold" : "normal");
     }
 
+    mousePressed()
+    {
+        super.mousePressed();
+        if(this.deselected) this.point1 = createVector(this.textArea.x, this.textArea.y);
+    }
+
     mouseReleased()
     {
         if(!this.selected)
         {
             this.selected = true;
             this.point2 = createVector(this.point1.x + this.minWidth, this.point1.y + this.minHeight);
-            if(this.deselected)
-            {
-                this.selected = false;
-                this.deselected = false;
-            }
-            else this.onSelect();
+            this.onSelect();
         }
     }
 
-    use(){}
+    use()
+    {
+        this.username = user_name;
+        let div = this.div;
+        this.div = null;
+        let pDiv = this.pDiv;
+        this.pDiv = null;
+        let img = this.img;
+        let textArea = this.textArea;
+        if(img) this.img = {x : img.x, y : img.y, w : img.w, h : img.h};
+        this.textArea = null;
+        let layer = this.layer;
+        let area = this.area;
+        this.layer = null;
+        this.area = null;
+        let data = JSON.stringify(this);
+        this.onDeselectCalled = false;
+        this.layer = layer;
+        this.area = area;
+        this.textArea = textArea;
+        this.img = img;
+        this.div = div;
+        this.pDiv = pDiv;
+        this.text = "";
+        return data;
+    }
+
+    applyData(data)
+    {
+        super.applyData(data);
+        this.textArea.value(data.text);
+        this.bold = data.bold;
+        this.italic = data.italic;
+        this.fontSize = data.fontSize;
+        this.font = data.font;
+        this.fontColor = new Color(data.fontColor.r, data.fontColor.g, data.fontColor.b, data.fontColor.a);
+        this.setTextStyle(this.textArea, this.fontColor, this.bold, this.italic, this.fontSize, this.font);
+    }
 
     onSelect()
     {
-        super.onSelect();
+        if(this.deselected) 
+        {
+            this.selected = false;
+            this.onSelectCalled = false;
+            this.deselected = false;
+            this.img = null;
+            this.point1 = null;
+            this.point2 = null;
+            this.text = "";
+            return;
+        }
+        this.onSelectCalled = true;
+        this.img = new Img(this.point1, this.point2, this.layer);
         this.textArea.show();
     }
 
     onDeselect()
     {
         this.deselected = true;
+        this.onDeselectCalled = true;
         push();
         textSize(this.fontSize);
         textFont(this.font);
@@ -860,18 +910,18 @@ class Text extends Select
         strokeWeight(0);
         let dx = parseFloat(this.textArea.style("padding"));
         let dy = dx + 2;
-        let content = this.textArea.value();
+        this.text = this.textArea.value();
         let line = "";
         let dh = 0;
-        for(let i = 0; i <= content.length; i++)
+        for(let i = 0; i <= this.text.length; i++)
         {
-            if(content[i] == "\n" || i == content.length)
+            if(this.text[i] == "\n" || i == this.text.length)
             {
                 text(line, this.img.x + dx, this.img.y + dy + dh, this.img.w, this.img.h - dh);
                 dh += parseFloat(this.textArea.style("line-height"));
                 line = "";
             }
-            else line += content[i];
+            else line += this.text[i];
         }
         pop();
         this.textArea.hide();
@@ -890,6 +940,12 @@ class Text extends Select
         this.img.w = w;
         this.img.h = h;
         this.textArea.size(this.img.w, this.img.h);
+    }
+
+    drawEachFrame()
+    {
+        if(this.deselected) return;
+        super.drawEachFrame();
     }
 }
 
