@@ -89,16 +89,21 @@ h1 {
 }
 
 #chat-log::-webkit-scrollbar {
-    width: 8px;
+    width: 12px;
 }
 
 #chat-log::-webkit-scrollbar-thumb {
     background: gray;
-    border-radius: 15px;
+    border: solid #FFFFFF00 6px;
+    border-left: none;
+    background-clip: padding-box;
 }
 
 #chat-log::-webkit-scrollbar-thumb:hover {
     background: #555;
+    border: solid #FFFFFF00 6px;
+    border-left: none;
+    background-clip: padding-box;
 }
 
 .textChat {

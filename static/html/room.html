@@ -30,38 +30,41 @@
 
 <div class="second-column" style="grid-row: '1'">
 
-<div class="settingInstruments control" id="brushes_display" style="display:none;">
-    <div class="text-text-Setting"> - Brushes - </div>
-    <div class="text-Setting">
-    <div class="instrumentCase">
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Marker"  style="background-image: url(marker.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Pencil"  style="background-image: url(pencil.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Eraser"  style="background-image: url(eraser.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Spray"  style="background-image: url(spray.png); background-size: cover"/>
-        <input type = "button" class = "Mode instrumentsBrushes" id = "Fill"  style="background-image: url(placeholder.png); background-size: cover"/>
-    </div>
-     <div class="thicknessContainer">
-     <div class="thickness">
-     <div class="text-edit"> толщина </div>
-     <input type="number" id = "ThicknessText" class="brushes-edit" />
-      </div>
-         <div>
-             <input type="range" class="range-input" id = "ThicknessSlider" min="1" max="100" value="50">
-         </div>
-    </div>
-        <div class="opacityContainer">
-            <div class="opacity">
-                <div class="text-edit"> непрозрачность </div>
-                <input type="number" class="brushes-edit" id = "TransparencyText" />
+<div class="settingInstruments control">
+    <div id = "settings-control-button" class = "view-control-button"></div>
+    <div id="brushes_display" style="display:none;">
+        <div class="text-text-Setting"> - Brushes - </div>
+        <div class="text-Setting">
+            <div class="instrumentCase">
+                <input type = "button" class = "Mode instrumentsBrushes" id = "Marker"  style="background-image: url(marker.png); background-size: cover"/>
+                <input type = "button" class = "Mode instrumentsBrushes" id = "Pencil"  style="background-image: url(pencil.png); background-size: cover"/>
+                <input type = "button" class = "Mode instrumentsBrushes" id = "Eraser"  style="background-image: url(eraser.png); background-size: cover"/>
+                <input type = "button" class = "Mode instrumentsBrushes" id = "Spray"  style="background-image: url(spray.png); background-size: cover"/>
+                <input type = "button" class = "Mode instrumentsBrushes" id = "Fill"  style="background-image: url(placeholder.png); background-size: cover"/>
             </div>
-            <div>
-                <input type="range" class="range-input" id = "TransparencySlider" min="1" max="255" value="127">
+            <div class="thicknessContainer">
+                <div class="thickness">
+                    <div class="text-edit"> толщина </div>
+                    <input type="number" id = "ThicknessText" class="brushes-edit" />
+                </div>
+                <div>
+                    <input type="range" class="range-input" id = "ThicknessSlider" min="1" max="100" value="50">
+                </div>
             </div>
+            <div class="opacityContainer">
+                <div class="opacity">
+                    <div class="text-edit"> непрозрачность </div>
+                    <input type="number" class="brushes-edit" id = "TransparencyText" />
+                </div>
+                <div>
+                    <input type="range" class="range-input" id = "TransparencySlider" min="1" max="255" value="127">
+                </div>
+            </div>
+            <color-palette id = "Palette" rows = "4" columns = "8"></color-palette>
         </div>
-        <color-palette id = "Palette" rows = "4" columns = "8"></color-palette>
-</div>
-</div>
-    <div class="settingInstruments control" id="figures_display" style="display:block;">
+    </div>
+
+    <div id="figures_display" style="display:block;">
         <div class="text-text-Setting"> - Figures - </div>
         <div class="text-Setting">
         <div class="box-figures-Setting">
@@ -72,84 +75,86 @@
         </div>
         </div>
     </div>
-    <div class="settingInstruments control" id="text_display" style="display:none;">
+    <div id="text_display" style="display:none;">
         <div class="text-text-Setting"> - Text - </div>
-                <div class="text-Setting">
-                    <div class="box-text">
-                        <select name="select-text-Setting" >
-                            <option selected value="s1"> Шрифт1 </option>
-                            <option selected value="s2"> Шрифт2 </option>
-                            <option selected value="s3"> Шрифт3 </option>
-                            <option selected value="s4"> Arial </option>
-                        </select>
-                        <div class="size-text">
-                            <select name="size-select-text" >
-                                <option selected value="s1"> 5 </option>
-                                <option selected value="s2"> 10 </option>
-                                <option selected value="s3"> 15 </option>
-                                <option selected value="s4"> 20</option>
-                            </select>
-                                <input type="color" class="icon-color" />
-                        </div>
-                        <div class="change-text">
-                            <input type = "button" class = "buttons-text" id = "bold"  style="background-image: url(bold.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text" id = "italic"  style="background-image: url(italic.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text" id = "underline"  style="background-image: url(underline.png); background-size: cover"/>
-                        </div>
-                        <div class="change-position">
-                            <input type = "button" class = "buttons-text2" id = "leftText"  style="background-image: url(left.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text2" id = "centerText"  style="background-image: url(center.png); background-size: cover"/>
-                            <input type = "button" class = "buttons-text2" id = "rightText"  style="background-image: url(right.png); background-size: cover"/>
-                        </div>
-                    </div>
+        <div class="text-Setting">
+            <div class="box-text">
+                <select name="select-text-Setting" >
+                    <option selected value="s1"> Шрифт1 </option>
+                    <option selected value="s2"> Шрифт2 </option>
+                    <option selected value="s3"> Шрифт3 </option>
+                    <option selected value="s4"> Arial </option>
+                </select>
+                <div class="size-text">
+                    <select name="size-select-text" >
+                        <option selected value="s1"> 5 </option>
+                        <option selected value="s2"> 10 </option>
+                        <option selected value="s3"> 15 </option>
+                        <option selected value="s4"> 20</option>
+                    </select>
+                    <input type="color" class="icon-color" />
                 </div>
+                <div class="change-text">
+                    <input type = "button" class = "buttons-text" id = "bold"  style="background-image: url(bold.png); background-size: cover"/>
+                    <input type = "button" class = "buttons-text" id = "italic"  style="background-image: url(italic.png); background-size: cover"/>
+                    <input type = "button" class = "buttons-text" id = "underline"  style="background-image: url(underline.png); background-size: cover"/>
+                </div>
+                <div class="change-position">
+                    <input type = "button" class = "buttons-text2" id = "leftText"  style="background-image: url(left.png); background-size: cover"/>
+                    <input type = "button" class = "buttons-text2" id = "centerText"  style="background-image: url(center.png); background-size: cover"/>
+                    <input type = "button" class = "buttons-text2" id = "rightText"  style="background-image: url(right.png); background-size: cover"/>
+                </div>
+            </div>
+        </div>
     </div>
 
+</div>
+    
 
-    <div class="settingRoomInfo control" id="settingRoomInfo">
+<div class="settingRoomInfo control" id="settingRoomInfo">
 
-        Your name:{{username}} {{username|json_script:"user-name"}}<br>
-        Your status:<span id="my_status"> {{status}} {{status|json_script:"status"}}</span><br>
-        Room name:{{room_name}} {{room_name|json_script:"room-name" }}<br>
-        <div id="roommates">
-            <ul id="list_roommates">
-                Roommates: <br>{% for i in roommates %}
-                    {% if i.name == username %}
+    Your name:{{username}} {{username|json_script:"user-name"}}<br>
+    Your status:<span id="my_status"> {{status}} {{status|json_script:"status"}}</span><br>
+    Room name:{{room_name}} {{room_name|json_script:"room-name" }}<br>
+    <div id="roommates">
+        <ul id="list_roommates">
+            Roommates: <br>{% for i in roommates %}
+                {% if i.name == username %}
+                {% else %}
+                    <li id="li_{{i.name}}">
+                    {{i.name}}:
+                    {% if status == 'Creator' %}
+                        <select name="select-name" onchange="ChangeStatus(this)" id = "{{i.name}}">
+                            &#9
+                            {% if i.status == 'Witness' %}
+                                <option id = "_witness">Witness</option>
+                                <option id = "_editor">Editor</option>
+                            {% else %}
+                            &#9
+                                <option id = "_editor">Editor</option>
+                                <option id = "_witness">Witness</option>
+                            {%endif%}
+                            <input type="button" id="delete_{{i.name}}" onclick="deleteUser(this)" value="X"></input>
+                        </select>
                     {% else %}
-                     <li id="li_{{i.name}}">
-                        {{i.name}}:
-                        {% if status == 'Creator' %}
-                            <select name="select-name" onchange="ChangeStatus(this)" id = "{{i.name}}">
-                                &#9
-                                {% if i.status == 'Witness' %}
-                                    <option id = "_witness">Witness</option>
-                                    <option id = "_editor">Editor</option>
-                                {% else %}
-                                &#9
-                                    <option id = "_editor">Editor</option>
-                                    <option id = "_witness">Witness</option>
-                                {%endif%}
-                                <input type="button" id="delete_{{i.name}}" onclick="deleteUser(this)" value="X"></input>
-                            </select>
-                        {% else %}
-                            <span id="{{i.name}}_status">{{i.status}}</span>
-                        {% endif %}
-                     {%endif%}
-                     </li>
-                {% endfor %}
-            </ul>
-        </div>
+                        <span id="{{i.name}}_status">{{i.status}}</span>
+                    {% endif %}
+                    {%endif%}
+                    </li>
+            {% endfor %}
+        </ul>
     </div>
-    <div class="chat control">
-        <textarea readonly id="chat-log" cols="100" rows="20"></textarea>
-        <div class="textChat" >
-            <input id="chat-message-input" type="text" size="100">
-            <input id="chat-message-submit" type="button" value="Send">
-        </div>
+</div>
+<div class="chat control">
+    <textarea readonly id="chat-log" cols="100" rows="20"></textarea>
+    <div class="textChat" >
+        <input id="chat-message-input" type="text" size="100">
+        <input id="chat-message-submit" type="button" value="Send">
     </div>
-    <main>
+</div>
+<main>
 
-    </main>
+</main>
 </div>
 </div>
 <script src = "palette.js"></script>

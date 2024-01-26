@@ -16,22 +16,36 @@ socket.on('edit-canvas', data =>
     drawData.push(data.data);
 });
 
-document.getElementsByClassName('settingInstruments').forEach(el => 
+// document.getElementsByClassName('settingInstruments').forEach(el => 
+// {
+//     let view_control_button = document.createElement('div');
+//     view_control_button.setAttribute('class', 'view-control-button');
+//     view_control_button.addEventListener('click', () =>
+//     {
+//         document.getElementsByClassName('chat')[0].classList.toggle('hidden-right');
+//         document.getElementsByClassName('settingInstruments').forEach(element =>
+//         {
+//             let button = element.getElementsByClassName('view-control-button')[0];
+//             element.classList.toggle('hidden-right');
+//             button.classList.toggle('view-control-button-open');
+//         });
+//     });
+//     el.appendChild(view_control_button)
+// });
+
+let view_control_button = document.getElementById('settings-control-button');
+
+function useViewControlButton(action = 'toggle')
 {
-    let view_control_button = document.createElement('div');
-    view_control_button.setAttribute('class', 'view-control-button');
-    view_control_button.addEventListener('click', () =>
-    {
-        document.getElementsByClassName('chat')[0].classList.toggle('hidden-right');
-        document.getElementsByClassName('settingInstruments').forEach(element =>
-        {
-            let button = element.getElementsByClassName('view-control-button')[0];
-            element.classList.toggle('hidden-right');
-            button.classList.toggle('view-control-button-open');
-        });
-    });
-    el.appendChild(view_control_button)
-});
+    let status = view_control_button.classList.contains('view-control-button-open');
+    if(action == 'open' && !status) return;
+    if(action == 'close' && status) return;
+    view_control_button.classList.toggle('view-control-button-open');
+    document.getElementsByClassName('chat')[0].classList.toggle('hidden-right');
+    document.getElementsByClassName('settingInstruments')[0].classList.toggle('hidden-right');
+}
+
+view_control_button.addEventListener('click', useViewControlButton);
 
 let brushes_display = document.getElementById('brushes_display');
 let text_display= document.getElementById('text_display');
@@ -40,24 +54,26 @@ let figures_display = document.getElementById('figures_display');
 let brushes = document.getElementById('Brushes');
 let txt = document.getElementById('Text');
 let figures = document.getElementById('Figures');
-//console.log(figures);
 
 figures.addEventListener('click', (event) => {
     brushes_display.style.display = "none";
     text_display.style.display = "none";
     figures_display.style.display = "block";
+    useViewControlButton('open');
 });
 
 txt.addEventListener('click', (event) => {
     brushes_display.style.display = "none";
     text_display.style.display = "block";
     figures_display.style.display = "none";
+    useViewControlButton('open');
 });
 
 brushes.addEventListener('click', (event) => {
     brushes_display.style.display = "block";
     text_display.style.display = "none";
     figures_display.style.display = "none";
+    useViewControlButton('open');
 });
 
 let exit = document.getElementById('Exit');
