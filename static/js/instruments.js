@@ -780,7 +780,7 @@ class Text extends Select
 
         this.text = "";
 
-        this.movePositions = ["LEFT", "RIGHT", "TOP", "BOTTOM"];
+        this.movePositions = ["LEFT", "RIGHT", "TOP", "BOTTOM", "LEFT-CENTER", "RIGHT-CENTER", "TOP-CENTER", "BOTTOM-CENTER", "LEFT-TOP", "RIGHT-TOP", "LEFT-BOTTOM", "RIGHT-BOTTOM"];
         this.scalePositions = [];
         this.textArea = createElement("textarea");
         canvas.addLayer(this.textArea);
