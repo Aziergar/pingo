@@ -120,8 +120,8 @@ function mouseReleased()
 {
     mouseIsReleased = true;
     if(mouseOverControl && mousePressedOverControl) canvas.instrument.mousePressed();
+    if(mouseOverControl || !mousePressedOverControl) canvas.instrument.mouseReleased();
     mousePressedOverControl = false;
-    canvas.instrument.mouseReleased();
     if(canvas.drawn)
     {
         canvas.drawn = false;
@@ -131,6 +131,7 @@ function mouseReleased()
 
 function mouseDragged(event)
 {
+    if(mousePressedOverControl) return;
     canvas.instrument.mouseDragged(event);
 }
 
