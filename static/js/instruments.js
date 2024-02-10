@@ -913,15 +913,18 @@ class Text extends Select
         this.text = this.textArea.value();
         let line = "";
         let dh = 0;
-        for(let i = 0; i <= this.text.length; i++)
+        if(this.text.length > 0)
         {
-            if(this.text[i] == "\n" || i == this.text.length)
+            for(let i = 0; i <= this.text.length; i++)
             {
-                text(line, this.img.x + dx, this.img.y + dy + dh, this.img.w, this.img.h - dh);
-                dh += parseFloat(this.textArea.style("line-height"));
-                line = "";
+                if(this.text[i] == "\n" || i == this.text.length)
+                {
+                    text(line, this.img.x + dx, this.img.y + dy + dh, this.img.w, this.img.h - dh);
+                    dh += parseFloat(this.textArea.style("line-height"));
+                    line = "";
+                }
+                else line += this.text[i];
             }
-            else line += this.text[i];
         }
         pop();
         this.textArea.hide();

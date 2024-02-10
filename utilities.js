@@ -78,7 +78,7 @@ export async function generateUniqueID(id_length, rule = async(id) => false)
     return id;
 }
 
-const default_name = 'x╬xJ0HNx╬x'
+const default_name = 'x╬xJ0HNx╬x';
 
 export function validateName(name)
 {
