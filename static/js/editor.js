@@ -34,10 +34,7 @@ function setup()
     });
     document.addEventListener('copy', copyFunction);
     document.addEventListener('paste', pasteFunction);
-    document.getElementById("Download").addEventListener('click', () =>
-    {
-        saveCanvas(canvas.canvas, createFileName(), 'png');
-    });
+    document.getElementById("Download").addEventListener('click', saveFile);
     thicknessSlider.addEventListener('change', () =>
     {
         setThickness(thicknessSlider.value);

@@ -210,18 +210,18 @@ class Img
         return {x : Math.round(x), y : Math.round(y), w : Math.round(w), h : Math.round(h)};
     }
 
-    flip(flipDirection = "X")
+    flip(flipDirection = 'X')
     {
         this.img.loadPixels();
-        let h = flipDirection == "Y" ? this.img.height / 2 : this.img.height;
-        let w = flipDirection == "X" ? this.img.width / 2 : this.img.width;
+        let h = flipDirection == 'Y' ? this.img.height / 2 : this.img.height;
+        let w = flipDirection == 'X' ? this.img.width / 2 : this.img.width;
         for(let i = 0; i < h; i++)
         {
             for(let j = 0; j < w; j++)
             {
                 let index1 = (i * this.img.width + j) * 4;
-                let k = flipDirection == "Y" ? this.img.height - 1 - i : i;
-                let l = flipDirection == "X" ? this.img.width - 1 - j : j;
+                let k = flipDirection == 'Y' ? this.img.height - 1 - i : i;
+                let l = flipDirection == 'X' ? this.img.width - 1 - j : j;
                 let index2 = (k * this.img.width + l) * 4;
                 for(let m = 0; m < 4; m ++)
                 {
@@ -244,14 +244,14 @@ class Img
         this.h = rect.h;
     }
 
-    resize(newW, newH, direction = "RIGHT-CENTER")
+    resize(newW, newH, direction = 'RIGHT-CENTER')
     {
 
-        if(direction.includes("LEFT")) this.x -= newW - this.w;
-        if(direction.includes("TOP")) this.y -= newH - this.h;
+        if(direction.includes('LEFT')) this.x -= newW - this.w;
+        if(direction.includes('TOP')) this.y -= newH - this.h;
 
-        if(direction == "RIGHT-CENTER" || direction == "LEFT-CENTER") this.w = newW;
-        else if(direction == "TOP-CENTER" || direction == "BOTTOM-CENTER") this.h = newH;
+        if(direction == 'RIGHT-CENTER' || direction == 'LEFT-CENTER') this.w = newW;
+        else if(direction == 'TOP-CENTER' || direction == 'BOTTOM-CENTER') this.h = newH;
         else
         {
             this.w = newW;
@@ -259,10 +259,10 @@ class Img
         }
     }
 
-    resizeByDelta(deltaX, deltaY, direction = "RIGHT-CENTER", isProportional = false)
+    resizeByDelta(deltaX, deltaY, direction = 'RIGHT-CENTER', isProportional = false)
     {
-        if(direction.includes("LEFT")) deltaX *= -1;
-        if(direction.includes("TOP")) deltaY *= -1;
+        if(direction.includes('LEFT')) deltaX *= -1;
+        if(direction.includes('TOP')) deltaY *= -1;
         if(isProportional)
         {
             if(deltaX >= deltaY) this.resize(this.w + deltaX, 0, direction);
@@ -281,7 +281,7 @@ class Img
             let mouse = canvas.getMouse();
             let distance = null;
             let scaleDirection = null;
-            if(isBetween(mouse.x, this.x, this.x + this.w) && isBetween(mouse.y, this.y, this.y + this.h)) scaleDirection = "INSIDE";
+            if(isBetween(mouse.x, this.x, this.x + this.w) && isBetween(mouse.y, this.y, this.y + this.h)) scaleDirection = 'INSIDE';
             function checkEdgeDistance(edge, img)
             {
                 let mouseButtons;
@@ -289,68 +289,68 @@ class Img
                 let dif = null;
                 switch(edge)
                 {
-                    case "LEFT":
+                    case 'LEFT':
                         mouseButtons = [mouse.y, mouse.x];
                         borders = [img.y, img.y + img.h, img.x];
                         break;
-                    case "RIGHT":
+                    case 'RIGHT':
                         mouseButtons = [mouse.y, mouse.x];
                         borders = [img.y, img.y + img.h, img.x + img.w];
                         break;
-                    case "TOP":
+                    case 'TOP':
                         mouseButtons = [mouse.x, mouse.y];
                         borders = [img.x, img.x + img.w, img.y];
                         break;
-                    case "BOTTOM":
+                    case 'BOTTOM':
                         mouseButtons = [mouse.x, mouse.y];
                         borders = [img.x, img.x + img.w, img.y + img.h];
                         break;
-                    case "LEFT-TOP":
+                    case 'LEFT-TOP':
                         dif = dist(img.x, img.y, mouse.x, mouse.y);
                         break;
-                    case "RIGHT-TOP":
+                    case 'RIGHT-TOP':
                         dif = dist(img.x + img.w, img.y, mouse.x, mouse.y);
                         break;
-                    case "RIGHT-BOTTOM":
+                    case 'RIGHT-BOTTOM':
                         dif = dist(img.x + img.w, img.y + img.h, mouse.x, mouse.y);
                         break;
-                    case "LEFT-BOTTOM":
+                    case 'LEFT-BOTTOM':
                         dif = dist(img.x, img.y + img.h, mouse.x, mouse.y);
                         break;
-                    case "LEFT-CENTER":
+                    case 'LEFT-CENTER':
                         dif = dist(img.x, img.y + img.h / 2, mouse.x, mouse.y);
                         break;
-                    case "RIGHT-CENTER":
+                    case 'RIGHT-CENTER':
                         dif = dist(img.x + img.w, img.y + img.h / 2, mouse.x, mouse.y);
                         break;
-                    case "BOTTOM-CENTER":
+                    case 'BOTTOM-CENTER':
                         dif = dist(img.x + img.w / 2, img.y + img.h, mouse.x, mouse.y);
                         break;
-                    case "TOP-CENTER":
+                    case 'TOP-CENTER':
                         dif = dist(img.x + img.w / 2, img.y, mouse.x, mouse.y);
                 }
                 if(dif || isBetween(mouseButtons[0], borders[0], borders[1]))
                 {
                     if(!dif) dif = absDifference(mouseButtons[1], borders[2]);
-                    if(dif <= 20 / canvas.zoom.zoom && (edge.includes("-") || (!distance || dif < distance)))
+                    if(dif <= 20 / canvas.zoom.zoom && (edge.includes('-') || (!distance || dif < distance)))
                     {
                         distance = dif;
                         scaleDirection = edge;
                     }
                 }
             }
-            checkEdgeDistance("LEFT", this);
-            checkEdgeDistance("RIGHT", this);
-            checkEdgeDistance("TOP", this);
-            checkEdgeDistance("BOTTOM", this);
-            checkEdgeDistance("LEFT-TOP", this);
-            checkEdgeDistance("RIGHT-TOP", this);
-            checkEdgeDistance("RIGHT-BOTTOM", this);
-            checkEdgeDistance("LEFT-BOTTOM", this);
-            checkEdgeDistance("LEFT-CENTER", this);
-            checkEdgeDistance("RIGHT-CENTER", this);
-            checkEdgeDistance("TOP-CENTER", this);
-            checkEdgeDistance("BOTTOM-CENTER", this);
+            checkEdgeDistance('LEFT', this);
+            checkEdgeDistance('RIGHT', this);
+            checkEdgeDistance('TOP', this);
+            checkEdgeDistance('BOTTOM', this);
+            checkEdgeDistance('LEFT-TOP', this);
+            checkEdgeDistance('RIGHT-TOP', this);
+            checkEdgeDistance('RIGHT-BOTTOM', this);
+            checkEdgeDistance('LEFT-BOTTOM', this);
+            checkEdgeDistance('LEFT-CENTER', this);
+            checkEdgeDistance('RIGHT-CENTER', this);
+            checkEdgeDistance('TOP-CENTER', this);
+            checkEdgeDistance('BOTTOM-CENTER', this);
             return scaleDirection;
         }
         return null;
@@ -359,29 +359,29 @@ class Img
 
 function copyFunction(event)
 {
-    if(!canvas.instrument.name == "SelectImage") return;
+    if(!canvas.instrument.name == 'SelectImage') return;
     if(!canvas.instrument.selected) return;
     let img = createGraphics(canvas.instrument.img.w, canvas.instrument.img.h);
     img.image(canvas.instrument.img.img, 0, 0, canvas.instrument.img.w, canvas.instrument.img.h);
     let url = img.elt.toDataURL();
     img.remove();
-    event.clipboardData.setData("Text", url);
+    event.clipboardData.setData('Text', url);
     event.preventDefault();
 }
 
 function pasteFunction(event)
 {
     let url = null;
-    if(event.clipboardData.types.indexOf("text/plain") != -1 && event.clipboardData.getData("text/plain").startsWith("data:image/png;base64,"))
+    if(event.clipboardData.types.indexOf('text/plain') != -1 && event.clipboardData.getData('text/plain').startsWith('data:image/png;base64,'))
     {
-        url = event.clipboardData.getData("text/plain");
+        url = event.clipboardData.getData('text/plain');
     }
     else if(event.clipboardData.files.length == 0
-        || (!event.clipboardData.files[0].name.endsWith(".png")
-        && !event.clipboardData.files[0].name.endsWith(".jpg")
-        && !event.clipboardData.files[0].name.endsWith(".jpeg"))) return;
+        || (!event.clipboardData.files[0].name.endsWith('.png')
+        && !event.clipboardData.files[0].name.endsWith('.jpg')
+        && !event.clipboardData.files[0].name.endsWith('.jpeg'))) return;
 
-    canvas.setInstrument("SelectImage");
+    canvas.setInstrument('SelectImage');
     let x = (canvas.canvasParent.parent().getBoundingClientRect().left - canvas.canvasParent.elt.getBoundingClientRect().left) / canvas.zoom.zoom;
     let y = (canvas.canvasParent.parent().getBoundingClientRect().top - canvas.canvasParent.elt.getBoundingClientRect().top) / canvas.zoom.zoom;
     x = Math.max(x, 0);
@@ -403,7 +403,7 @@ function pasteFunction(event)
     if(!url)
     {
         let reader = new FileReader();
-        url = "";
+        url = '';
         reader.onload = function(e) {
             url = reader.result;
             pasteImage();
@@ -417,7 +417,62 @@ function pasteFunction(event)
 
 function createFileName()
 {
-    return new Date().toString().replaceAll(/(\:|\+)/g, "_");
+    let options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+    return 'Pingo_' + new Date().toLocaleDateString(undefined, options).replaceAll(/\W/g, '_');
+}
+
+async function getImageBlob(type)
+{
+    switch(type)
+    {
+        case "image/jpeg":
+            break;
+        case "image/bmp":
+            break;
+        default:
+            type = "image/png";
+    }
+    let blob = new Promise((resolve) =>
+    {
+        canvas.canvas.elt.toBlob(async (_blob) => resolve(_blob), type, 1);
+    });
+    return await blob;
+}
+
+async function saveFile()
+{
+    let options = {
+        suggestedName: createFileName(),
+        startIn: 'downloads',
+        types: [
+            {
+                description: 'PNG',
+                accept: { 'image/png': ['.png'] }
+            },
+            {
+                description: 'JPEG',
+                accept: { 'image/jpeg': ['.jpg', '.jpeg'] }
+            },
+            {
+                description: 'Bitmap',
+                accept: { 'image/bmp': ['.bmp'] }
+            }
+        ]
+    };
+    try {
+        let file = await window.showSaveFilePicker(options);
+        let type = "image/" + await file.name.substring(file.name.length - 3);
+        let stream = await file.createWritable();
+        await stream.write(await getImageBlob(type));
+        await stream.close();
+    } catch{}
 }
 
 function setThickness(newValue, instrument)
