@@ -487,21 +487,54 @@ function setThickness(newValue, instrument)
 function setTransparency(newValue, instrument)
 {
     if(!instrument) instrument = canvas.instrument;
+    if(instrument == canvas.getInstrument('SelectImage')) return;
     newValue = constrain(newValue - newValue % 1, transparencySlider.min, transparencySlider.max);
     if(instrument.constTransparency) newValue = instrument.color.a;
-    instrument.color.a = newValue;
+    if(instrument == canvas.getInstrument('Text')) 
+    {
+        instrument.fontColor.a = newValue;
+        instrument.setColor(instrument.fontColor);
+    }
+    else instrument.color.a = newValue;
     transparencySlider.value = newValue;
     transparencyText.value = newValue;
 }
 
-function setColor(newValue, instrument)
+function setColor(newValue, instrument, alpha = false)
 {
     if(!instrument)
     {
         canvas.instruments.forEach(el =>
         {
-            if(el.colorable) el.color = newValue; 
+            if(el.name == "Text") 
+            {
+                if(!alpha) newValue.a = el.fontColor.a;
+                el.setColor(new Color(newValue));
+            }
+            else if(el.colorable) 
+            {
+                if(!alpha) newValue.a = el.color.a;
+                el.color = new Color(newValue); 
+            }
         });
     }
-    else instrument.color = value;
+    else 
+    {
+        if(!alpha) newValue.a = instrument.color.a;
+        instrument.color = new Color(newValue);
+    }
+}
+
+function setFontSize(newValue)
+{
+    instrument = canvas.getInstrument("Text");
+    newValue = constrain(newValue, fontSize.min, fontSize.max);
+    instrument.setFontSize(newValue);
+    fontSize.value = newValue;
+}
+
+function setFont(newValue)
+{
+    instrument = canvas.getInstrument("Text");
+    instrument.setFont(newValue);
 }

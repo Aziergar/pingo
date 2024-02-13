@@ -2,6 +2,14 @@ class Color
 {
     constructor(r, g, b, a = 255)
     {
+        if(r.r != null)
+        {
+            this.r = r.r;
+            this.g = r.g;
+            this.b = r.b;
+            this.a = r.a;
+            return;
+        }
         this.r = r;
         this.g = g;
         this.b = b;
@@ -39,12 +47,12 @@ class Color
 
     stringify()
     {
-        return "rgba(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + this.a.toString() + ")";
+        return "rgba(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + (this.a / 255).toString() + ")";
     }
 }
 
-let black = new Color(0, 0, 0);
-let white = new Color(255, 255, 255);
+Object.defineProperty(globalThis, 'black', { get: () => new Color(0, 0, 0) });
+Object.defineProperty(globalThis, 'white', { get: () => new Color(255, 255, 255) });
 let transparent = new Color(255, 255, 255, 0);
 
 class Canvas
@@ -92,6 +100,11 @@ class Canvas
                                 new Eraser("Eraser")];
         this.setInstrument("Marker");
         this.canvas.loadPixels();
+    }
+
+    getInstrument(name)
+    {
+        return this.instruments.filter(el => el.name == name)[0];
     }
 
     beforeDraw()
@@ -789,7 +802,8 @@ class Text extends Select
         this.textArea.style("outline: none");
         this.textArea.style("resize: none");
         this.textArea.style("overflow: hidden");
-        this.textArea.style("line-height: 1.2");
+        this.textArea.style("line-height: 1");
+        this.textArea.style("text-wrap: nowrap");
 
         this.setTextStyle(this.textArea, color, bold, italic, fontSize, font);
 
@@ -797,9 +811,9 @@ class Text extends Select
 
         this.div = createDiv();
         this.pDiv = createDiv();
-        this.pDiv.style("overflow: hidden; width: 0px; height: 0px");
+        this.pDiv.style("overflow: hidden; width: 0px; height: 0px; text-wrap: nowrap;");
         this.div.parent(this.pDiv);
-        this.div.style("background: transparent; width: fit-content; height: fit-content; line-height: 1.2");
+        this.div.style("background: transparent; width: fit-content; height: fit-content; line-height: 1; text-wrap: nowrap");
         this.setTextStyle(this.div, color, bold, italic, fontSize, font);
         this.div.style("color: transparent");
 
@@ -809,19 +823,50 @@ class Text extends Select
 
     setTextStyle(element, color, bold, italic, fontSize, font)
     {
+        this.setFont(font, element);
+        this.setColor(color, element);
+        this.setFontSize(fontSize, element);
+        this.setStyle(bold, italic, element);
+    }
+
+    setFont(font, element)
+    {
+        if(!element) element = this.textArea;
+        this.font = font;
+        element.style("font-family", font);
+    }
+    
+    setFontSize(fontSize, element)
+    {
+        if(!element) element = [this.textArea, this.div];
+        else element = [element];
+        this.fontSize = fontSize;
+        element.forEach(el =>
+        {
+            el.style("font-size", fontSize + "px");
+        });
+    }
+
+    setStyle(bold, italic, element)
+    {
+        if(!element) element = this.textArea;
         this.style = NORMAL;
         if(bold && italic) this.style = BOLDITALIC;
         else if(bold) this.style = BOLD;
         else if(italic) this.style = ITALIC;
-        this.fontSize = fontSize;
-        this.fontColor = color;
-        this.font = font;
-
-        element.style("font-size", fontSize);
-        element.style("font-family", font);
-        element.style("color: " + color.stringify());
         element.style("font-style:", italic ? "italic" : "normal");
         element.style("font-weight:", bold ? "bold" : "normal");
+    }
+
+    setColor(color, element)
+    {
+        if(!element) element = [this.textArea];
+        else element = [element];
+        this.fontColor = color;
+        element.forEach(el =>
+        {
+            el.style("color: " + color.stringify());
+        });
     }
 
     mousePressed()
@@ -1154,6 +1199,7 @@ class DashedLine
 
     drawShape(vertices)
     {
+        this.layer.push();
         this.calculatePatternOffset(this.patternOffset);
         this.layer.strokeCap(SQUARE);
         this.layer.strokeWeight(this.weight);
@@ -1165,6 +1211,7 @@ class DashedLine
         }
 
         this.patternOffset = startOffset;
+        this.layer.pop();
     }
 
     drawRect(vertice1, vertice2)

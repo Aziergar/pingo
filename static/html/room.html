@@ -7,6 +7,8 @@
     <script src = "https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
     <link rel="stylesheet" type="text/css" href="editor.css">
 </head>
 <body style="display:'grid'" >
@@ -34,7 +36,7 @@
     <div id = "settings-control-button" class = "view-control-button"></div>
     <div id="brushes_display" style="display:none;">
         <div class="text-text-Setting"> - Brushes - </div>
-        <div class="text-Setting">
+        <div class="settings-block">
             <div class="instrumentCase">
                 <input type = "button" class = "Mode instrumentsBrushes" id = "Marker"  style="background-image: url(marker.png); background-size: cover"/>
                 <input type = "button" class = "Mode instrumentsBrushes" id = "Pencil"  style="background-image: url(pencil.png); background-size: cover"/>
@@ -42,7 +44,7 @@
                 <input type = "button" class = "Mode instrumentsBrushes" id = "Spray"  style="background-image: url(spray.png); background-size: cover"/>
                 <input type = "button" class = "Mode instrumentsBrushes" id = "Fill"  style="background-image: url(placeholder.png); background-size: cover"/>
             </div>
-            <div class="thicknessContainer">
+            <div class="thicknessContainer" id = "thickness">
                 <div class="thickness">
                     <div class="text-edit"> толщина </div>
                     <input type="number" id = "ThicknessText" class="brushes-edit" />
@@ -51,13 +53,13 @@
                     <input type="range" class="range-input" id = "ThicknessSlider" min="1" max="100" value="50">
                 </div>
             </div>
-            <div class="opacityContainer">
+            <div class="opacityContainer" id = "opacity">
                 <div class="opacity">
                     <div class="text-edit"> непрозрачность </div>
                     <input type="number" class="brushes-edit" id = "TransparencyText" />
                 </div>
                 <div>
-                    <input type="range" class="range-input" id = "TransparencySlider" min="1" max="255" value="127">
+                    <input type="range" class="range-input" id = "TransparencySlider" min="1" max="255" value="255">
                 </div>
             </div>
             <color-palette id = "Palette" rows = "4" columns = "8"></color-palette>
@@ -66,7 +68,7 @@
 
     <div id="figures_display" style="display:block;">
         <div class="text-text-Setting"> - Figures - </div>
-        <div class="text-Setting">
+        <div class="settings-block">
         <div class="box-figures-Setting">
             <input type = "button" class = "Mode figuresIntSetting" id = "Line"  style="background-image: url(line.png); background-size: cover"/>
             <input type = "button" class = "Mode figuresIntSetting" id = "Rect"  style="background-image: url(square.png); background-size: cover"/>
@@ -77,33 +79,23 @@
     </div>
     <div id="text_display" style="display:none;">
         <div class="text-text-Setting"> - Text - </div>
-        <div class="text-Setting">
+        <div class="settings-block">
             <div class="box-text">
-                <select name="select-text-Setting" >
-                    <option selected value="s1"> Шрифт1 </option>
-                    <option selected value="s2"> Шрифт2 </option>
-                    <option selected value="s3"> Шрифт3 </option>
-                    <option selected value="s4"> Arial </option>
-                </select>
-                <div class="size-text">
-                    <select name="size-select-text" >
-                        <option selected value="s1"> 5 </option>
-                        <option selected value="s2"> 10 </option>
-                        <option selected value="s3"> 15 </option>
-                        <option selected value="s4"> 20</option>
-                    </select>
-                    <input type="color" class="icon-color" />
-                </div>
+                <div class = "font">
+                    <select id = "select-text-font"></select>
+                    <input type = "number" id = "text-size" min = "1" max = "70" value = "14"/>
+                </div>                
+                    <!-- <input type="color" class="icon-color" /> -->
                 <div class="change-text">
                     <input type = "button" class = "buttons-text" id = "bold"  style="background-image: url(bold.png); background-size: cover"/>
                     <input type = "button" class = "buttons-text" id = "italic"  style="background-image: url(italic.png); background-size: cover"/>
                     <input type = "button" class = "buttons-text" id = "underline"  style="background-image: url(underline.png); background-size: cover"/>
                 </div>
-                <div class="change-position">
+                <!-- <div class="change-position">
                     <input type = "button" class = "buttons-text2" id = "leftText"  style="background-image: url(left.png); background-size: cover"/>
                     <input type = "button" class = "buttons-text2" id = "centerText"  style="background-image: url(center.png); background-size: cover"/>
                     <input type = "button" class = "buttons-text2" id = "rightText"  style="background-image: url(right.png); background-size: cover"/>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

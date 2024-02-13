@@ -34,6 +34,28 @@ let brushes_display = document.getElementById('brushes_display');
 let text_display= document.getElementById('text_display');
 let figures_display = document.getElementById('figures_display');
 
+let thicknessDiv = document.getElementById('thickness');
+let opacityDiv = document.getElementById('opacity');
+let paletteDiv = document.getElementById('Palette');
+
+function moveControls(settings)
+{
+    let block = settings.getElementsByClassName('settings-block')[0];
+    let divs = [thicknessDiv, opacityDiv, paletteDiv];
+    document.getElementsByClassName('settings-block').forEach(el =>
+    {
+        if(el == block) return;
+        divs.forEach(div =>
+        {
+            if(Array.from(el.children).includes(div)) 
+                el.removeChild(div);
+        });
+    });
+    if(block.parentElement.id != 'text_display') block.appendChild(thicknessDiv);
+    block.appendChild(opacityDiv);
+    block.appendChild(paletteDiv);
+}
+
 let brushes = document.getElementById('Brushes');
 let txt = document.getElementById('Text');
 let figures = document.getElementById('Figures');
@@ -43,6 +65,7 @@ figures.addEventListener('click', (event) => {
     text_display.style.display = "none";
     figures_display.style.display = "block";
     useViewControlButton('open');
+    moveControls(figures_display);
 });
 
 txt.addEventListener('click', (event) => {
@@ -50,6 +73,7 @@ txt.addEventListener('click', (event) => {
     text_display.style.display = "block";
     figures_display.style.display = "none";
     useViewControlButton('open');
+    moveControls(text_display);
 });
 
 brushes.addEventListener('click', (event) => {
@@ -57,7 +81,37 @@ brushes.addEventListener('click', (event) => {
     text_display.style.display = "none";
     figures_display.style.display = "none";
     useViewControlButton('open');
+    moveControls(brushes_display);
 });
+
+brushes.click();
+
+(async() => {
+    let fontChoice = new Choices(document.getElementById('select-text-font'), 
+        {
+            allowHTML: true,
+            itemSelectText: '',
+            classNames: {
+                containerOuter: 'choices fontChoiceOuter',
+                containerInner: 'choices__inner fontChoiceInner',
+                item: 'choices__item fontChoiceItem'
+            }
+        });
+
+    let fonts = Array.from(new Set((await window.queryLocalFonts()).map(font => font.family)));
+
+    let _interval = setInterval(() =>
+    {
+        fontChoice.setValue(fonts.slice(0, 20));
+        fonts = fonts.slice(20);
+        if(fonts.length == 0) 
+        {
+            fontChoice.setChoiceByValue('Arial');
+            clearInterval(_interval);
+        }
+    }, 10);
+
+})();
 
 let exit = document.getElementById('Exit');
 exit.addEventListener('click', (event) => {

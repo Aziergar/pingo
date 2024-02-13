@@ -7,15 +7,17 @@ let mousePressedOverControl = false;
 let mouseOverControl = false;
 let mouseIsReleased = false;
 
-function setup()
+async function setup()
 {
     thicknessSlider = document.getElementById('ThicknessSlider');
     thicknessText = document.getElementById('ThicknessText');
     transparencySlider = document.getElementById('TransparencySlider');
     transparencyText = document.getElementById('TransparencyText');
+    fontSize = document.getElementById('text-size');
     palette = document.getElementById('Palette');
+    fontSelector = document.getElementById('select-text-font');
     transparencySlider.max = 255;
-    transparencySlider.min = 0;
+    transparencySlider.min = 1;
     transparencySlider.step = 1;
 
     document.getElementsByClassName('control').forEach(control =>
@@ -54,6 +56,14 @@ function setup()
     palette.addEventListener('change', () =>
     {
         setColor(Color.fromHex(palette.getValue()));
+    });
+    fontSize.addEventListener('change', () =>
+    {
+        setFontSize(fontSize.value);
+    });
+    fontSelector.addEventListener('change', () =>
+    {
+        setFont(fontSelector.value);
     });
 }
 
