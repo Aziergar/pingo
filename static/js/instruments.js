@@ -1029,6 +1029,7 @@ class Primitive extends SelectImage
     constructor(name, layer = canvas.outerLayer, thickness = new Thickness(1, 1), color = black)
     {
         super(name, layer, true);
+        this.colorable = true;
         this.color = color;
         this.thickness = thickness.min;
         this.thicknessRange = thickness;
