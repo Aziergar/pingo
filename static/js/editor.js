@@ -65,6 +65,16 @@ async function setup()
     {
         setFont(fontSelector.value);
     });
+    buttonBold.addEventListener('click', () =>
+    {
+        setStyle(buttonBold.classList.contains('text-style-pressed'),
+                 buttonItalic.classList.contains('text-style-pressed'));
+    });
+    buttonItalic.addEventListener('click', () =>
+    {
+        setStyle(buttonBold.classList.contains('text-style-pressed'),
+                 buttonItalic.classList.contains('text-style-pressed'));
+    });
 }
 
 function draw()
@@ -147,7 +157,6 @@ function mousePressed()
     if(mouseOverControl) 
     {
         mousePressedOverControl = true;
-        return;
     }
     canvas.instrument.mousePressed();
 }

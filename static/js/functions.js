@@ -379,7 +379,8 @@ function pasteFunction(event)
     else if(event.clipboardData.files.length == 0
         || (!event.clipboardData.files[0].name.endsWith('.png')
         && !event.clipboardData.files[0].name.endsWith('.jpg')
-        && !event.clipboardData.files[0].name.endsWith('.jpeg'))) return;
+        && !event.clipboardData.files[0].name.endsWith('.jpeg')
+        && !event.clipboardData.files[0].name.endsWith('.bmp'))) return;
 
     canvas.setInstrument('SelectImage');
     let x = (canvas.canvasParent.parent().getBoundingClientRect().left - canvas.canvasParent.elt.getBoundingClientRect().left) / canvas.zoom.zoom;
@@ -537,4 +538,9 @@ function setFont(newValue)
 {
     instrument = canvas.getInstrument("Text");
     instrument.setFont(newValue);
+}
+
+function setStyle(bold, italic)
+{
+    canvas.getInstrument('Text').setStyle(bold, italic);
 }

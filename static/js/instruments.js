@@ -847,15 +847,35 @@ class Text extends Select
         });
     }
 
-    setStyle(bold, italic, element)
+    setStyle(bold, italic, element, style)
     {
-        if(!element) element = this.textArea;
+        switch(style)
+        {
+            case BOLD:
+                bold = true;
+                italic = false;
+                break;
+            case ITALIC:
+                bold = false;
+                italic = true;
+                break;
+            case BOLDITALIC:
+                bold = true;
+                italic = true;
+        }
+        this.bold = bold;
+        this.italic = italic;
+        if(!element) element = [this.textArea, this.div];
+        else element = [element];
         this.style = NORMAL;
         if(bold && italic) this.style = BOLDITALIC;
         else if(bold) this.style = BOLD;
         else if(italic) this.style = ITALIC;
-        element.style("font-style:", italic ? "italic" : "normal");
-        element.style("font-weight:", bold ? "bold" : "normal");
+        element.forEach(el =>
+        {
+            el.style("font-style", italic ? "italic" : "normal");
+            el.style("font-weight", bold ? "bold" : "normal");
+        });
     }
 
     setColor(color, element)
@@ -877,6 +897,11 @@ class Text extends Select
 
     mouseReleased()
     {
+        if(this.selected && !this.img.mouseOver())
+        {
+            this.onDeselect();
+            return;
+        }
         if(!this.selected)
         {
             this.selected = true;
@@ -887,6 +912,7 @@ class Text extends Select
 
     use()
     {
+        this.readyToDraw = true;
         this.username = user_name;
         let div = this.div;
         this.div = null;
@@ -915,12 +941,13 @@ class Text extends Select
     applyData(data)
     {
         super.applyData(data);
+        this.readyToDraw = false;
         this.textArea.value(data.text);
-        this.bold = data.bold;
-        this.italic = data.italic;
+        this.style = data.style;
         this.fontSize = data.fontSize;
         this.font = data.font;
         this.fontColor = new Color(data.fontColor.r, data.fontColor.g, data.fontColor.b, data.fontColor.a);
+        this.setStyle(null, null, this.textArea, this.style);
         this.setTextStyle(this.textArea, this.fontColor, this.bold, this.italic, this.fontSize, this.font);
     }
 

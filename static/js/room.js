@@ -113,6 +113,20 @@ brushes.click();
 
 })();
 
+let buttonBold = document.getElementById('bold');
+let buttonItalic = document.getElementById('italic');
+
+buttonBold.addEventListener('click', () =>
+{
+    buttonBold.classList.toggle('text-style-pressed');
+});
+
+buttonItalic.addEventListener('click', () =>
+{
+    buttonItalic.classList.toggle('text-style-pressed');
+});
+
+
 let exit = document.getElementById('Exit');
 exit.addEventListener('click', (event) => {
     if (status == 'Creator'){
