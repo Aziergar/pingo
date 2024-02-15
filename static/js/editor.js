@@ -7,6 +7,8 @@ let mousePressedOverControl = false;
 let mouseOverControl = false;
 let mouseIsReleased = false;
 
+let sendData = [];
+
 async function setup()
 {
     thicknessSlider = document.getElementById('ThicknessSlider');
@@ -77,7 +79,7 @@ async function setup()
     });
 }
 
-function draw()
+async function draw()
 {
     canvas.beforeDraw();
     canvas.outerLayer.clear();
@@ -85,42 +87,54 @@ function draw()
     if (canvas.drawCheck())
     {
         canvas.drawn = true;
-        let sendData = canvas.instrument.use();
+        sendData.push(canvas.instrument.use());
         socket.emit('edit-canvas', { room_id: room_id, sendData: sendData });
+        sendData.length = 0;
     }
     mouseIsReleased = false;
     while(drawData.length > 0)
     {
         let instrument;
-        let data = JSON.parse(drawData.shift());
-        if(data.username != null)
+        let dataArray = drawData.shift();
+        for(let i = 0; i < dataArray.length; i++)
         {
-            instrument = canvas.dataInstruments.find(element => element.name == data.name && element.username == data.username);
-            if(!instrument)
+            let data = JSON.parse(dataArray[i]);
+            if(data.username != null)
             {
-                switch(data.name)
+                instrument = canvas.dataInstruments.find(element => element.name == data.name && element.username == data.username);
+                if(!instrument)
                 {
-                    case 'SelectImage':
-                        instrument = new SelectImage('SelectImage', canvas.onlineLayer);
-                        break;
-                    case 'Text':
-                        instrument = new Text('Text', canvas.onlineLayer);
-                        break;
-                    case 'Line':
-                        instrument = new Line('Line', canvas.onlineLayer);
-                        break;
-                    case 'Rect':
-                        instrument = new Rect('Rect', canvas.onlineLayer);
-                        break;
-                    case 'Ellipse':
-                        instrument = new Ellipse('Ellipse', canvas.onlineLayer);
+                    switch(data.name)
+                    {
+                        case 'SelectImage':
+                            instrument = new SelectImage('SelectImage', canvas.onlineLayer);
+                            break;
+                        case 'Text':
+                            instrument = new Text('Text', canvas.onlineLayer);
+                            break;
+                        case 'Line':
+                            instrument = new Line('Line', canvas.onlineLayer);
+                            break;
+                        case 'Rect':
+                            instrument = new Rect('Rect', canvas.onlineLayer);
+                            break;
+                        case 'Ellipse':
+                            instrument = new Ellipse('Ellipse', canvas.onlineLayer);
+                    }
+                    instrument.username = data.username;
+                    canvas.dataInstruments.push(instrument);
                 }
-                instrument.username = data.username;
-                canvas.dataInstruments.push(instrument);
             }
+            else instrument = canvas.dataInstruments.find(element => element.name == data.name);
+
+            if(data.paste) 
+            {
+                await pasteFunction(null, data, instrument);
+                instrument.onDraw();
+            }
+
+            else instrument.useData(data);
         }
-        else instrument = canvas.dataInstruments.find(element => element.name == data.name);
-        instrument.useData(data);
     }
     canvas.dataInstruments.forEach(instrument =>
     {

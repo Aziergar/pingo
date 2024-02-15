@@ -369,51 +369,84 @@ function copyFunction(event)
     event.preventDefault();
 }
 
-function pasteFunction(event)
+async function pasteFunction(event, instrumentData, dataInstrument)
 {
+    let data = { paste: true, name: 'SelectImage', username: user_name };
     let url = null;
-    if(event.clipboardData.types.indexOf('text/plain') != -1 && event.clipboardData.getData('text/plain').startsWith('data:image/png;base64,'))
-    {
-        url = event.clipboardData.getData('text/plain');
-    }
-    else if(event.clipboardData.files.length == 0
-        || (!event.clipboardData.files[0].name.endsWith('.png')
-        && !event.clipboardData.files[0].name.endsWith('.jpg')
-        && !event.clipboardData.files[0].name.endsWith('.jpeg')
-        && !event.clipboardData.files[0].name.endsWith('.bmp'))) return;
+    let x, y;
 
-    canvas.setInstrument('SelectImage');
-    let x = (canvas.canvasParent.parent().getBoundingClientRect().left - canvas.canvasParent.elt.getBoundingClientRect().left) / canvas.zoom.zoom;
-    let y = (canvas.canvasParent.parent().getBoundingClientRect().top - canvas.canvasParent.elt.getBoundingClientRect().top) / canvas.zoom.zoom;
-    x = Math.max(x, 0);
-    y = Math.max(y, 0);
-    if(canvas.instrument.img) canvas.instrument.onDeselect();
-    canvas.instrument.img = new Img(x, y, 1, 1, canvas.canvas);
-
-    function pasteImage()
+    if(!instrumentData)
     {
-        loadImage(url, img =>
+        if(event.clipboardData.types.indexOf('text/plain') != -1 && event.clipboardData.getData('text/plain').startsWith('data:image/png;base64,'))
         {
-            canvas.instrument.img.img = img;
-            canvas.instrument.point1 = createVector(x, y);
-            canvas.instrument.point2 = createVector(x + img.width / pixelDensity(), y + img.height / pixelDensity());
-            canvas.instrument.selected = true;
-        });
+            url = event.clipboardData.getData('text/plain');
+            data.url = url;
+        }
+        else if(event.clipboardData.files.length == 0
+            || (!event.clipboardData.files[0].name.endsWith('.png')
+            && !event.clipboardData.files[0].name.endsWith('.jpg')
+            && !event.clipboardData.files[0].name.endsWith('.jpeg')
+            && !event.clipboardData.files[0].name.endsWith('.bmp'))) return;
+
+        canvas.setInstrument('SelectImage');
+        x = (canvas.canvasParent.parent().getBoundingClientRect().left - canvas.canvasParent.elt.getBoundingClientRect().left) / canvas.zoom.zoom;
+        y = (canvas.canvasParent.parent().getBoundingClientRect().top - canvas.canvasParent.elt.getBoundingClientRect().top) / canvas.zoom.zoom;
+        x = Math.max(x, 0);
+        y = Math.max(y, 0);
+        if(canvas.instrument.img) canvas.instrument.onDeselect();
+        data.x = x;
+        data.y = y;
+    }
+    else 
+    {
+        url = instrumentData.url;
+        x = instrumentData.x;
+        y = instrumentData.y;
     }
 
-    if(!url)
+    async function pasteImage()
+    {
+        let promise = new Promise(resolve =>
+        {
+            loadImage(url, img =>
+            {
+                let instrument = instrumentData ? dataInstrument : canvas.instrument;
+                let layer = instrumentData ? canvas.onlineLayer : canvas.canvas;
+                instrument.img = new Img(x, y, 1, 1, layer);
+                instrument.img.img = img;
+                instrument.point1 = createVector(x, y);
+                instrument.point2 = createVector(x + img.width / pixelDensity(), y + img.height / pixelDensity());
+                instrument.selected = true;
+                resolve();
+            });
+        });
+        await promise;
+    }
+
+    if(url) await pasteImage();
+    else
     {
         let reader = new FileReader();
         url = '';
-        reader.onload = function(e) {
-            url = reader.result;
-            pasteImage();
-        }
+        let promise = new Promise(resolve =>
+        {
+            reader.onload = async function(e) {
+                url = reader.result;
+                data.url = url;
+                await pasteImage();
+                resolve();
+            }
+        })
         reader.readAsDataURL(event.clipboardData.items[0].getAsFile());
+        await promise;
     }
-    else pasteImage();
 
-    event.preventDefault();
+    if(event) event.preventDefault();
+
+    if(instrumentData) return;
+    sendData.push(JSON.stringify(data));
+    //canvas.instrument.on
+    //sendData.push(canvas.instrument.use());
 }
 
 function createFileName()
